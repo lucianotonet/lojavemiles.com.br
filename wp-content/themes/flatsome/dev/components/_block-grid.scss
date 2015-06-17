@@ -57,7 +57,7 @@ $block-grid-media-queries: true !default;
   }
 
   /* Foundation Block Grids for above small breakpoint */
-  @media #{$small} {
+   @media only screen and (min-width:$small-screen){
     /* Remove small grid clearing */
     @for $i from 1 through $block-grid-elements {
       .small-block-grid-#{($i)} > li:nth-of-type(#{$i}n+1) { clear: none; }

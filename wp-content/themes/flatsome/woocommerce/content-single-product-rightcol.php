@@ -1,10 +1,10 @@
 <?php
  
-	global $post, $product, $flatsome_opt;
+    global $post, $product, $flatsome_opt;
 
-	// Get category permalink
-	$permalinks 	= get_option( 'woocommerce_permalinks' );
-	$category_slug 	= empty( $permalinks['category_base'] ) ? _x( 'product-category', 'slug', 'woocommerce' ) : $permalinks['category_base'];
+    // Get category permalink
+    $permalinks     = get_option( 'woocommerce_permalinks' );
+    $category_slug  = empty( $permalinks['category_base'] ) ? _x( 'product-category', 'slug', 'woocommerce' ) : $permalinks['category_base'];
  
 ?>
 
@@ -17,7 +17,7 @@
      do_action( 'woocommerce_before_single_product' );
 ?>   
 
-<div itemscope itemtype="http://schema.org/Product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>	
+<div itemscope itemtype="http://schema.org/Product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>> 
     
 <div class="row">    
      
@@ -59,8 +59,8 @@
         
                 <div class="next-prev-nav">
                     <?php // edit this in inc/template-tags.php // ?>
-                    <?php next_post_link_product('%link', 'icon-angle-left next', true); ?>
-                    <?php previous_post_link_product('%link', 'icon-angle-right prev', true); ?>
+                    <?php next_post_link_product(); ?>
+                    <?php previous_post_link_product(); ?>
                 </div>
 
              <?php dynamic_sidebar('product-sidebar'); ?>
@@ -70,13 +70,6 @@
         
 </div><!-- end row -->
     
-    
-<?php
-	//Get the Thumbnail URL for pintrest
-	$src = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), false, '' );
-?>
-
-
     
 <div class="row">
     <div class="large-12 columns">
@@ -95,8 +88,8 @@
 </div><!-- .row -->
 
 
-	<div class="related-product">
-		<?php
+    <div class="related-product">
+        <?php
             /**
              * woocommerce_after_single_product_summary hook
              *

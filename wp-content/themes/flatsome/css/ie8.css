@@ -3,7 +3,12 @@
 .hide-for-small{display: inherit!important}
 .mini-cart-item{max-height: 85px}
 
+.lt-ie9 .wide-nav .header-nav > li{margin-right:10px;}
+
+
 .lt-ie9 .ux_banner .inner.center,.lt-ie9 .ux-text-overlay .text-vertical-center{top:auto!important;bottom:15%!important}
+.lt-ie9 div[id*=banner_grid] > .row > .columns { padding: 0px 0px !important; } .lt-ie9 .ux_banner-grid .columns { margin-bottom: 0px !important; }
+
 
 /* The Grid ---------------------- */
 .lt-ie9 .row { width: 1080px; max-width: 100%; min-width: 768px; margin: 0 auto; }

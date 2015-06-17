@@ -14,7 +14,7 @@ global $post, $product, $flatsome_opt, $wc_cpdf;
 
 <?php if($wc_cpdf->get_value(get_the_ID(), '_bubble_new')) { ?>
 <div class="callout large <?php if($product->is_on_sale()) echo 'has-sale'; ?> <?php echo $flatsome_opt['bubble_style']; ?>">
-            <div class="inner success-bg">
+            <div class="inner callout-new-bg">
               <div class="inner-text "><?php _e('New','flatsome'); ?></div>
             </div>
 </div><!-- end callout -->
@@ -40,7 +40,7 @@ global $post, $product, $flatsome_opt, $wc_cpdf;
 				$variable_product1= new WC_Product_Variation( $variation_id );
 				$regular_price = $variable_product1 ->regular_price;
 				$sales_price = $variable_product1 ->sale_price;
-				$percentage= round((( ( $regular_price - $sales_price ) / $regular_price ) * 100),1) ;
+				$percentage= round((( ( $regular_price - $sales_price ) / $regular_price ) * 100),0) ;
 					if ($percentage > $maximumper) {
 						$maximumper = $percentage;
 					}
@@ -51,11 +51,11 @@ global $post, $product, $flatsome_opt, $wc_cpdf;
  </div><!-- end callout -->
 
 <?php elseif($product->is_on_sale() && $flatsome_opt['sale_bubble_percentage'] && $product->product_type == 'simple') : ?>
-<div class="callout large <?php echo $flatsome_opt['bubble_style']; ?> scroll-animate" data-animate="fadeInLeft">
+<div class="callout large <?php echo $flatsome_opt['bubble_style']; ?> ">
     <div class="inner">
       <div class="inner-text"><?php 
     	$price = '';
-		$percentage = round( ( ( $product->regular_price - $product->sale_price ) / $product->regular_price ) * 100 );
+		$percentage = round( ( ( $product->regular_price - $product->sale_price ) / $product->regular_price ) * 100,0);
 		echo '-'.$price . sprintf( __('%s', 'woocommerce' ), $percentage . '%' ); ?></div>
     </div>
 </div><!-- end callout -->

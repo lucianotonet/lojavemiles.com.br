@@ -158,16 +158,16 @@ function of_ajax_callback()
 	global $options_machine, $of_options;
 
 	$nonce=$_POST['security'];
-	
+
+
 	if (! wp_verify_nonce($nonce, 'of_ajax_nonce') ) die('-1'); 
 			
 	//get options array from db
 	$all = of_get_options();
 	
 	$save_type = $_POST['type'];
-	
-	//echo $_POST['data'];
-	
+		
+		
 	//Uploads
 	if($save_type == 'upload')
 	{
@@ -239,6 +239,7 @@ function of_ajax_callback()
 		unset($smof_data['of_save']);
 		of_save_options($smof_data);
 		flush_rewrite_rules();
+
 		die('1');
 	}
 	elseif ($save_type == 'reset')

@@ -10,8 +10,16 @@
  */
 if ( ! isset( $content_width ) ) $content_width = 1000; /* pixels */
 
-/* add woocommerce support */
+/* Add WooCommerce support */
 add_theme_support( 'woocommerce' );
+add_theme_support( 'yellow-pencil' );
+
+/* Check if WooCommerce is active */
+function ux_is_woocommerce_active(){
+  if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    return true;
+  }
+}
 
 /* Add theme option panel */
 require_once('admin/index.php'); // load theme option panel
@@ -19,10 +27,18 @@ require_once('admin/index.php'); // load theme option panel
 global $flatsome_opt;
 $flatsome_opt = $smof_data;
 
+/* Global Flatsome Option */
+function flatsome_opt( $option ) {
+ global $flatsome_opt;
+ if( ! empty( $flatsome_opt[$option] ) ) {
+ return $flatsome_opt[$option];
+ }
+}
 
 /************ Plugin recommendations **********/
 require_once ('inc/class-tgm-plugin-activation.php');
 add_action( 'tgmpa_register', 'flatsome_register_required_plugins' );
+
 function flatsome_register_required_plugins() {
 
 	/**
@@ -34,8 +50,8 @@ function flatsome_register_required_plugins() {
 			'name'     				=> 'WooCommerce', // The plugin name
 			'slug'     				=> 'woocommerce', // The plugin slug (typically the folder name)
 			//'source'   				=> get_template_directory() . '/inc/plugins/woocommerce.zip', // The plugin source
-			'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '2.2.4', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
+			'version' 				=> '2.2.8', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> 'http://wordpress.org/plugins/woocommerce/', // If set, overrides default API URL and points to an external URL
@@ -46,7 +62,7 @@ function flatsome_register_required_plugins() {
 			'slug'     				=> 'ninja-forms', // The plugin slug (typically the folder name)
 			//'source'   				=> get_template_directory() . '/inc/plugins/ninja-forms.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '2.8.3', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '2.8.10', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> 'https://wordpress.org/plugins/ninja-forms/', // If set, overrides default API URL and points to an external URL
@@ -55,7 +71,7 @@ function flatsome_register_required_plugins() {
 		array(
 			'name'     				=> 'Regenerate Thumbnails', // The plugin name
 			'slug'     				=> 'regenerate-thumbnails', // The plugin slug (typically the folder name)
-			'source'   				=> get_template_directory() . '/inc/plugins/regenerate-thumbnails.zip', // The plugin source
+			//'source'   				=> get_template_directory() . '/inc/plugins/regenerate-thumbnails.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
 			'version' 				=> '2.2.4', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
@@ -67,41 +83,41 @@ function flatsome_register_required_plugins() {
 		array(
 			'name'     				=> 'Taxonomy Metadata', // The plugin name
 			'slug'     				=> 'taxonomy-metadata', // The plugin slug (typically the folder name)
-			'source'   				=> get_template_directory() . '/inc/plugins/taxonomy-metadata.zip', // The plugin source
+			//'source'   				=> get_template_directory() . '/inc/plugins/taxonomy-metadata.zip', // The plugin source
 			'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
 			'version' 				=> '0.4', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> true, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
-			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+			'external_url' 			=> 'https://wordpress.org/plugins/taxonomy-metadata/', // If set, overrides default API URL and points to an external URL
 		),
 		
 		array(
 			'name'     				=> 'Unlimited Sidebars Woosidebars', // The plugin name
 			'slug'     				=> 'woosidebars', // The plugin slug (typically the folder name)
-			'source'   				=> get_template_directory() . '/inc/plugins/woosidebars.zip', // The plugin source
+			//'source'   				=> get_template_directory() . '/inc/plugins/woosidebars.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
 			'version' 				=> '1.3.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
-			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+			'external_url' 			=> 'https://wordpress.org/plugins/woosidebars/', // If set, overrides default API URL and points to an external URL
 		),
 		
 		array(
 			'name'     				=> 'YITH WooCommerce Ajax Search', // The plugin name
 			'slug'     				=> 'yith-woocommerce-ajax-search', // The plugin slug (typically the folder name)
-			'source'   				=> get_template_directory() . '/inc/plugins/yith-woocommerce-ajax-search.zip', // The plugin source
+			//'source'   				=> get_template_directory() . '/inc/plugins/yith-woocommerce-ajax-search.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '1.1.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '1.2.2', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
-			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+			'external_url' 			=> 'https://wordpress.org/plugins/yith-woocommerce-ajax-search/', // If set, overrides default API URL and points to an external URL
 		),
 			array(
 			'name'     				=> 'YITH WooCommerce Wishlist', // The plugin name
 			'slug'     				=> 'yith-woocommerce-wishlist', // The plugin slug (typically the folder name)
 			//'source'   				=> get_template_directory() . '/inc/plugins/yith-woocommerce-wishlist.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '1.1.6', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '2.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
 			'external_url' 			=> 'https://wordpress.org/plugins/yith-woocommerce-wishlist/', // If set, overrides default API URL and points to an external URL
@@ -109,12 +125,12 @@ function flatsome_register_required_plugins() {
 			array(
 			'name'     				=> 'Nextend Facebook Connect', // The plugin name
 			'slug'     				=> 'nextend-facebook-connect', // The plugin slug (typically the folder name)
-			'source'   				=> get_template_directory() . '/inc/plugins/nextend-facebook-connect.zip', // The plugin source
+			//'source'   				=> get_template_directory() . '/inc/plugins/nextend-facebook-connect.zip', // The plugin source
 			'required' 				=> false, // If false, the plugin is only 'recommended' instead of required
-			'version' 				=> '1.4.59', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+			'version' 				=> '1.5.3', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
 			'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
 			'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
-			'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+			'external_url' 			=> 'https://wordpress.org/plugins/nextend-facebook-connect/', // If set, overrides default API URL and points to an external URL
 		)
 
 	);
@@ -126,38 +142,37 @@ function flatsome_register_required_plugins() {
 	 * Some of the strings are added into a sprintf, so see the comments at the
 	 * end of each line for what each argument will be.
 	 */
-	$config = array(
-		'domain'       		=> 'flatsome',         	// Text domain - likely want to be the same as your theme.
-		'default_path' 		=> '',                         	// Default absolute path to pre-packaged plugins
-		'parent_menu_slug' 	=> 'themes.php', 				// Default parent menu slug
-		'parent_url_slug' 	=> 'themes.php', 				// Default parent URL slug
-		'menu'         		=> 'install-required-plugins', 	// Menu slug
-		'has_notices'      	=> true,                       	// Show admin notices or not
-		'is_automatic'    	=> true,					   	// Automatically activate plugins after installation or not
-		'message' 			=> '',							// Message to output right before the plugins table
-		'strings'      		=> array(
-			'page_title'                       			=> __( 'Install Required Plugins', '' ),
-			'menu_title'                       			=> __( 'Install Plugins', 'flatsome' ),
-			'installing'                       			=> __( 'Installing Plugin: %s', 'flatsome' ), // %1$s = plugin name
-			'oops'                             			=> __( 'Something went wrong with the plugin API.', 'flatsome' ),
-			'notice_can_install_required'     			=> _n_noop( 'This theme requires the following plugin: %1$s.', 'This theme requires the following plugins: %1$s.' ), // %1$s = plugin name(s)
-			'notice_can_install_recommended'			=> _n_noop( 'This theme recommends the following plugin: %1$s.', 'This theme recommends the following plugins: %1$s.' ), // %1$s = plugin name(s)
-			'notice_cannot_install'  					=> _n_noop( 'Sorry, but you do not have the correct permissions to install the %s plugin. Contact the administrator of this site for help on getting the plugin installed.', 'Sorry, but you do not have the correct permissions to install the %s plugins. Contact the administrator of this site for help on getting the plugins installed.' ), // %1$s = plugin name(s)
-			'notice_can_activate_required'    			=> _n_noop( 'The following required plugin is currently inactive: %1$s.', 'The following required plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s)
-			'notice_can_activate_recommended'			=> _n_noop( 'The following recommended plugin is currently inactive: %1$s.', 'The following recommended plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s)
-			'notice_cannot_activate' 					=> _n_noop( 'Sorry, but you do not have the correct permissions to activate the %s plugin. Contact the administrator of this site for help on getting the plugin activated.', 'Sorry, but you do not have the correct permissions to activate the %s plugins. Contact the administrator of this site for help on getting the plugins activated.' ), // %1$s = plugin name(s)
-			'notice_ask_to_update' 						=> _n_noop( 'The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s.', 'The following plugins need to be updated to their latest version to ensure maximum compatibility with this theme: %1$s.' ), // %1$s = plugin name(s)
-			'notice_cannot_update' 						=> _n_noop( 'Sorry, but you do not have the correct permissions to update the %s plugin. Contact the administrator of this site for help on getting the plugin updated.', 'Sorry, but you do not have the correct permissions to update the %s plugins. Contact the administrator of this site for help on getting the plugins updated.' ), // %1$s = plugin name(s)
-			'install_link' 					  			=> _n_noop( 'Begin installing plugin', 'Begin installing plugins' ),
-			'activate_link' 				  			=> _n_noop( 'Activate installed plugin', 'Activate installed plugins' ),
-			'return'                           			=> __( 'Return to Required Plugins Installer', 'flatsome' ),
-			'plugin_activated'                 			=> __( 'Plugin activated successfully.', 'flatsome' ),
-			'complete' 									=> __( 'All plugins installed and activated successfully. %s', 'flatsome' ), // %1$s = dashboard link
-			'nag_type'									=> 'updated' // Determines admin notice type - can only be 'updated' or 'error'
-		)
-	);
+    $config = array(
+        'default_path' => '',                      // Default absolute path to pre-packaged plugins.
+        'menu'         => 'tgmpa-install-plugins', // Menu slug.
+        'has_notices'  => true,                    // Show admin notices or not.
+        'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+        'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+        'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+        'message'      => '',                      // Message to output right before the plugins table.
+        'strings'      => array(
+            'page_title'                      => __( 'Install Required Plugins', 'tgmpa' ),
+            'menu_title'                      => __( 'Install Plugins', 'tgmpa' ),
+            'installing'                      => __( 'Installing Plugin: %s', 'tgmpa' ), // %s = plugin name.
+            'oops'                            => __( 'Something went wrong with the plugin API.', 'tgmpa' ),
+            'notice_can_install_required'     => _n_noop( 'This theme requires the following plugin: %1$s.', 'This theme requires the following plugins: %1$s.' ), // %1$s = plugin name(s).
+            'notice_can_install_recommended'  => _n_noop( 'This theme recommends the following plugin: %1$s.', 'This theme recommends the following plugins: %1$s.' ), // %1$s = plugin name(s).
+            'notice_cannot_install'           => _n_noop( 'Sorry, but you do not have the correct permissions to install the %s plugin. Contact the administrator of this site for help on getting the plugin installed.', 'Sorry, but you do not have the correct permissions to install the %s plugins. Contact the administrator of this site for help on getting the plugins installed.' ), // %1$s = plugin name(s).
+            'notice_can_activate_required'    => _n_noop( 'The following required plugin is currently inactive: %1$s.', 'The following required plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s).
+            'notice_can_activate_recommended' => _n_noop( 'The following recommended plugin is currently inactive: %1$s.', 'The following recommended plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s).
+            'notice_cannot_activate'          => _n_noop( 'Sorry, but you do not have the correct permissions to activate the %s plugin. Contact the administrator of this site for help on getting the plugin activated.', 'Sorry, but you do not have the correct permissions to activate the %s plugins. Contact the administrator of this site for help on getting the plugins activated.' ), // %1$s = plugin name(s).
+            'notice_ask_to_update'            => _n_noop( 'The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s.', 'The following plugins need to be updated to their latest version to ensure maximum compatibility with this theme: %1$s.' ), // %1$s = plugin name(s).
+            'notice_cannot_update'            => _n_noop( 'Sorry, but you do not have the correct permissions to update the %s plugin. Contact the administrator of this site for help on getting the plugin updated.', 'Sorry, but you do not have the correct permissions to update the %s plugins. Contact the administrator of this site for help on getting the plugins updated.' ), // %1$s = plugin name(s).
+            'install_link'                    => _n_noop( 'Begin installing plugin', 'Begin installing plugins' ),
+            'activate_link'                   => _n_noop( 'Begin activating plugin', 'Begin activating plugins' ),
+            'return'                          => __( 'Return to Required Plugins Installer', 'tgmpa' ),
+            'plugin_activated'                => __( 'Plugin activated successfully.', 'tgmpa' ),
+            'complete'                        => __( 'All plugins installed and activated successfully. %s', 'tgmpa' ), // %s = dashboard link.
+            'nag_type'                        => 'updated' // Determines admin notice type - can only be 'updated', 'update-nag' or 'error'.
+        )
+    );
 
-	tgmpa( $plugins, $config );
+    tgmpa( $plugins, $config );
 
 }
 
@@ -168,8 +183,13 @@ function flatsome_setup() {
 	/* Custom CSS */
 	require( get_template_directory() . '/inc/custom-css.php' );
 
-	/* Custom template tags */
+	/* Template tags */
 	require( get_template_directory() . '/inc/template-tags.php' );
+
+	/* Admin helpers */
+	if (current_user_can('edit_pages') && !is_admin()) {
+		require( get_template_directory() . '/inc/helpers.php' );
+	}
 
 	/*  Custom functions that act independently of the theme templates */
 	require( get_template_directory() . '/inc/extras.php' );
@@ -186,6 +206,7 @@ function flatsome_setup() {
 	/*  Registrer menus. */
 	register_nav_menus( array(
 		'primary' => __( 'Main Menu', 'flatsome' ),
+		'primary_mobile' => __( 'Main Menu - Mobile', 'flatsome' ),
 		'footer' => __( 'Footer Menu', 'flatsome' ),
 		'top_bar_nav' => __( 'Top bar Menu', 'flatsome' ),
 		'my_account' => __( 'My Account Menu', 'flatsome' ),
@@ -202,6 +223,10 @@ add_action( 'after_setup_theme', 'flatsome_setup' );
  * Register widgetized area and update sidebar with default widgets
  */
 function flatsome_widgets_init() {
+	global $flatsome_opt;
+
+
+
 	register_sidebar( array(
 		'name'          => __( 'Sidebar', 'flatsome' ),
 		'id'            => 'sidebar-main',
@@ -231,10 +256,19 @@ function flatsome_widgets_init() {
 	) );
 
 
+	$footer_1 = 'large-3';
+	$footer_2 = 'large-3';
+
+	if(isset($flatsome_opt['footer_1_columns'])){
+		$footer_1 = $flatsome_opt['footer_1_columns'];
+		$footer_2 = $flatsome_opt['footer_2_columns'];
+	}
+
+
 	 register_sidebar( array(
-		'name'          => __( 'Footer 1 (4 column)', 'flatsome' ),
+		'name'          => __( 'Footer 1', 'flatsome' ),
 		'id'            => 'sidebar-footer-1',
-		'before_widget' => '<div id="%1$s" class="large-3 columns widget left %2$s">',
+		'before_widget' => '<div id="%1$s" class="'.$footer_1.' columns widget left %2$s">',
 		'after_widget'  => '</div>',
 		'before_title'  => '<h3 class="widget-title">',
 		'after_title'   => '</h3><div class="tx-div small"></div>',
@@ -242,9 +276,9 @@ function flatsome_widgets_init() {
 
 
 	 register_sidebar( array(
-		'name'          => __( 'Footer 2 (4 column)', 'flatsome' ),
+		'name'          => __( 'Footer 2', 'flatsome' ),
 		'id'            => 'sidebar-footer-2',
-		'before_widget' => '<div id="%1$s" class="large-3 columns widget left %2$s">',
+		'before_widget' => '<div id="%1$s" class="'.$footer_2.' columns widget left %2$s">',
 		'after_widget'  => '</div>',
 		'before_title'  => '<h3 class="widget-title">',
 		'after_title'   => '</h3><div class="tx-div small"></div>',
@@ -254,10 +288,11 @@ function flatsome_widgets_init() {
 }
 add_action( 'widgets_init', 'flatsome_widgets_init' );
 
-
-/* INCLUDE FLATSOME WIDGETS */
 include_once('inc/widgets/recent-posts.php'); // Load Widget Recent Posts
-include_once('inc/widgets/upsell-widget.php'); // Load Upsell widget
+
+if(ux_is_woocommerce_active()){
+	include_once('inc/widgets/upsell-widget.php'); // Load Upsell widget
+}
 
 /**
  * Enqueue scripts and styles
@@ -269,26 +304,29 @@ function flatsome_scripts() {
 
 	/* Styles */
 	if(!isset($flatsome_opt['minified_flatsome']) || !$flatsome_opt['minified_flatsome']){
-	   wp_enqueue_style( 'flatsome-icons', get_template_directory_uri() .'/css/fonts.css', array(), '2.0.5', 'all' );
-	   wp_enqueue_style( 'flatsome-animations', get_template_directory_uri() .'/css/animations.css', array(), '2.0.5', 'all' );
-	   wp_enqueue_style( 'flatsome-style', get_stylesheet_uri(), array(), '2.0.5', 'all');
-	   wp_register_style('flatsome-effect', get_template_directory_uri() .'/css/effects.css', array(), '2.0.5', 'all' );
+	   wp_enqueue_style( 'flatsome-icons', get_template_directory_uri() .'/css/fonts.css', array(), '2.5.3', 'all' );
+	   wp_enqueue_style( 'flatsome-animations', get_template_directory_uri() .'/css/animations.css', array(), '2.5.3', 'all' );
+	   wp_register_style('flatsome-effect', get_template_directory_uri() .'/css/effects.css', array(), '2.5.3', 'all' );
+	   wp_enqueue_style('flatsome-main-css', get_template_directory_uri() .'/css/foundation.css', array(), '2.5.3', 'all' );
 	} else {
-	   wp_enqueue_style( 'flatsome-css-minified', get_template_directory_uri() .'/css/flatsome.min.css', array(), '2.0.5', 'all' );
-	}	
+	   wp_enqueue_style( 'flatsome-css-minified', get_template_directory_uri() .'/css/flatsome.min.css', array(), '2.5.3', 'all' );
+	}
+
+	/* Load Custom styles CSS */
+	wp_enqueue_style( 'flatsome-style', get_stylesheet_uri(), array(), '2.5.3', 'all');
 
 	/* JS libaries */
 	if(!isset($flatsome_opt['minified_flatsome']) || !$flatsome_opt['minified_flatsome']){
-		wp_enqueue_script( 'flatsome-modernizer', get_template_directory_uri() .'/js/modernizr.js?v=2.02', array( 'jquery' ), '2.1.1', true );
- 		wp_enqueue_script( 'flatsome-plugins', get_template_directory_uri() .'/js/plugins.js?v=2.0.5', array( 'jquery' ), '2.1.1', true );
-		wp_enqueue_script( 'flatsome-iosslider', get_template_directory_uri() .'/js/jquery.iosslider.min.js?v=2.02', array( 'jquery' ), '2.1.1', true );
-		wp_enqueue_script( 'flatsome-magnific-popup', get_template_directory_uri() .'/js/jquery.magnific-popup.js?v=2.0.5', array( 'jquery' ), '2.1.1', true );
-		wp_enqueue_script( 'flatsome-theme-js', get_template_directory_uri() .'/js/theme.js?v=2.0.5', array( 'jquery' ), '2.1.1', true );
+		wp_enqueue_script( 'flatsome-modernizer', get_template_directory_uri() .'/js/modernizr.js?v=2.5.3', array( 'jquery' ), '1.11.2', true );
+ 		wp_enqueue_script( 'flatsome-plugins', get_template_directory_uri() .'/js/plugins.js?v=2.5.3', array( 'jquery' ), '1.11.2', true );
+		wp_enqueue_script( 'flatsome-iosslider', get_template_directory_uri() .'/js/jquery.iosslider.min.js?v=2.5.3', array( 'jquery' ), '1.4', true );
+		wp_enqueue_script( 'flatsome-magnific-popup', get_template_directory_uri() .'/js/jquery.magnific-popup.js?v=2.5.3', array( 'jquery' ), '1.2.1', true );
+		wp_enqueue_script( 'flatsome-theme-js', get_template_directory_uri() .'/js/theme.js?v=2.5.3', array( 'jquery' ), '1.2.1', true );
 	} else {
-		wp_enqueue_script( 'flatsome-theme-js-minified', get_template_directory_uri() .'/js/flatsome.min.js?v=2.0.5', array( 'jquery' ), '2.1.1', true );
+		wp_enqueue_script( 'flatsome-theme-js-minified', get_template_directory_uri() .'/js/flatsome.min.js?v=2.5.3', array( 'jquery' ), '1.2.1', true );
 	}
 
-	// add JS variables to scripts
+	/* add JS variables to scripts */
     wp_localize_script( 'flatsome-theme-js', 'ajaxURL',  array( 'ajaxurl'    => admin_url( 'admin-ajax.php' ) ) );
     wp_localize_script( 'flatsome-theme-js-minified', 'ajaxURL',  array( 'ajaxurl'    => admin_url( 'admin-ajax.php' ) ) );
 
@@ -298,11 +336,16 @@ function flatsome_scripts() {
 	wp_deregister_style('yith-wcwl-main');
 	wp_deregister_style('yith_wcas_frontend');
 	wp_deregister_style('nextend_fb_connect_stylesheet');
+
+	// Remove WooCommerce pretty photo
+    wp_deregister_style( 'woocommerce_prettyPhoto_css' );
+    wp_dequeue_script( 'prettyPhoto' );
+    wp_dequeue_script( 'prettyPhoto-init' );
 	
 	if ( ! is_admin() ) {
-	wp_deregister_style('woocommerce-layout');	
-	wp_deregister_style('woocommerce-smallscreen');	
-	wp_deregister_style('woocommerce-general');	
+		wp_deregister_style('woocommerce-layout');	
+		wp_deregister_style('woocommerce-smallscreen');	
+		wp_deregister_style('woocommerce-general');	
 	}
 
 
@@ -311,29 +354,8 @@ function flatsome_scripts() {
 	}
 
 }
-add_action( 'wp_enqueue_scripts', 'flatsome_scripts' );
+add_action( 'wp_enqueue_scripts', 'flatsome_scripts');
 
-
-/* ADD WP ADMIN BAR LINK TO THEME OPTIONS */
-
-// Admin Bar Customisation
-function flatsome_admin_bar_render() {
- global $wp_admin_bar;
- // Add a new top level menu link
-if (current_user_can( 'manage_options' ) ){
- $optionUrl = get_admin_url().'themes.php?page=optionsframework';
- $blocks_url = get_post_type_archive_link( 'blocks' );
- 
- $wp_admin_bar->add_menu( array(
- 'parent' => false,
- 'id' => 'theme_options',
- 'title' => __('Flatsome Theme Options'),
- 'href' => $optionUrl
- ));
-}
-
-}
-add_action( 'wp_before_admin_bar_render', 'flatsome_admin_bar_render' );
 
 
 /* WOOCOMMERCE SETTINGS */
@@ -345,6 +367,8 @@ remove_action( 'woocommerce_before_shop_loop', 'woocommerce_show_messages', 10 )
 remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
 remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
+remove_action( 'woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 10 );
+
 add_action( 'ux_woocommerce_navigate_products', 'woocommerce_result_count', 20 );
 add_action( 'ux_woocommerce_navigate_products', 'woocommerce_catalog_ordering', 30 );
 
@@ -365,6 +389,7 @@ add_filter('widget_text', 'do_shortcode');
 
 /* add shortcode to excerpt */
 add_filter('the_excerpt', 'do_shortcode');
+
 
 /* add exerpt option to pages */
 add_action('init', 'flatsome_post_type_support');
@@ -415,10 +440,9 @@ include_once('inc/post-types/featured-items.php');
 
 
 /* PAGE BUILDER BETA */
-if(is_admin() && $flatsome_opt['flatsome_builder'] || !isset($flatsome_opt['flatsome_builder'])){
+if(is_admin() && $flatsome_opt['flatsome_builder']){
 	include_once('inc/builder/flatsome-builder.php');
 }
-
 
 /* ADD CUSTOM WP_EDITOR CSS */
 add_filter('mce_css', 'my_editor_style');
@@ -458,6 +482,10 @@ function new_logout_url($logouturl, $redir)
 	return $logouturl . '&amp;redirect_to=' . urlencode($redir);
 }
 
+
+
+/* Include custom theme functions */
+get_template_part( 'functions_custom' );
 
 
 ?>

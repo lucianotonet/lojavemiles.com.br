@@ -21,19 +21,21 @@ function slider_script($sliderrandomid,$columns,$infinitive){
 		});
 
 		function slideResize(args) {
-			setTimeout(function() {
-			 var t=0;
-			 var t_elem;
-			 $(args.sliderContainerObject).find('li').each(function () {
-			 $this = $(this);
-			    if ( $this.outerHeight() > t ) {
-			        t_elem=this;
-			        t=$this.outerHeight();
-				}
-				});
-				$(args.sliderContainerObject).css('min-height',t);
-				$(args.sliderContainerObject).css('height','auto');
-			  }, 10);
+
+			 imagesLoaded( '#slider_<?php echo $sliderrandomid ?>', function() {
+			 		var t=0;
+					var t_elem;
+					$(args.sliderContainerObject).find('li').each(function () {
+					 $this = $(this);
+					    if ( $this.outerHeight() > t ) {
+					        t_elem=this;
+					        t=$this.outerHeight();
+						}
+						});
+					$(args.sliderContainerObject).css('min-height',t);
+					$(args.sliderContainerObject).css('height','auto');
+			 }); // images loaded 
+		
     	 }
 
     	 function slideChange(args,slider_count) {

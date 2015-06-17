@@ -1,44 +1,47 @@
 <?php
+
+// Add editor button top top of page
+function flatsome_builder_top(){
+  ?>
+    <h2 id="uxbuilder-enable-disable" class="nav-tab-wrapper woo-nav-tab-wrapper">
+      <a id="enable-uxbuilder" href="#" class="nav-tab"><strong style="color:#627f9a; padding: 0px 5px; margin-right:5px; border: 2px solid #627f9a;">F</strong> Page Builder</a>
+      <a id="disable-uxbuilder" href="#" class="nav-tab ">Editor</a>
+    </h2>
+  <?php
+}
+
+
 // Flatsome Builder Metaboxes
 function ux_drag_drop_box() {
-  $screens = array('page','blocks','product','featured_item');
+
+  $current_screen = get_current_screen()->id;
+  $screens = array('page','blocks','product','featured_item','post');
+
   foreach ( $screens as $screen ) {
-    // add styles and scripts
-    add_meta_box(
-      'ux_drag_and_drop',
-      __( 'Flatsome Page Builder <em>Beta</em>', 'flatsome' ),
-      'ux_drag_and_drop_box',
-      $screen, 'normal', 'high'
-    );
+    // add content to top
+    if($current_screen == $screen){
+       add_action('edit_form_top','flatsome_builder_top');
+    }
 
     add_meta_box(
-      'ux_drag_and_drop_enable',
-      __( 'Flatsome Page Builder <em>Beta</em>', 'flatsome' ),
-      'ux_drag_and_drop_box_enable',
-      $screen, 'side', 'high'
+      'ux_drag_and_drop',
+      __( 'Page Builder', 'flatsome' ),
+      'ux_drag_and_drop_box',
+      $screen, 'normal', 'high'
     );
   }  
 }
 add_action( 'add_meta_boxes', 'ux_drag_drop_box' );
 
 
-// Enable / disable box
-function ux_drag_and_drop_box_enable( $post ) { ?>
-<div id="uxbuilder-enable-disable" class="button-group">
-        <a id="enable-uxbuilder" class="button" href="#">Enabled</a>
-        <a id="disable-uxbuilder" class="button" href="#">Disabled</a>
-</div>
-<?php
-} 
-
 
 // Build layout
 function ux_drag_and_drop_box( $post ) { 
     // load scripts
-    wp_enqueue_script('ux_builder_app', get_template_directory_uri().'/inc/builder/app.js', array('wp-color-picker' ), false, true );
-    wp_enqueue_script('ux_builder_editable', get_template_directory_uri().'/inc/builder/editable.js');
+    wp_enqueue_script('ux_builder_app', get_template_directory_uri().'/inc/builder/app.js?v=2.2', array('wp-color-picker' ), false, true );
+    wp_enqueue_script('ux_builder_editable', get_template_directory_uri().'/inc/builder/editable.js?v=2.2');
 
-    wp_enqueue_style('ux_builder_style',get_template_directory_uri().'/inc/builder/builder_style.css');
+    wp_enqueue_style('ux_builder_style',get_template_directory_uri().'/inc/builder/builder_style.css?v=2.2');
     wp_enqueue_style('wp-color-picker');
 
   ?>
@@ -50,7 +53,7 @@ function ux_drag_and_drop_box( $post ) {
   </div>
 
     <!-- MAIN CONTENT -->
-        <div class="drag-drop-content ux-g-group" data-group="root"></div><!-- .drag-drop-content -->
+        <div id="main-sort" class="drag-drop-content ux-g-group" data-group="root"></div><!-- .drag-drop-content -->
     <!-- END MAIN CONTENT -->
 
   <div class="ux-add-elements-wrap" data-id="root">
@@ -58,7 +61,7 @@ function ux_drag_and_drop_box( $post ) {
   </div>
   </div><!-- #drag-and-drop -->
 
-  <p class="ux-builder-footer small">This is an early BETA version of Flatsome Page Builder. Always keep a backup of your page or enable revisions. You can disable it in Theme Options > Global. Got any feedback? Email: <a href="mailto:support@uxthemes.com?subject=[BUILDER] < Please keep [builder] in subject...">support@uxthemes.com</a></p>
+  <p class="ux-builder-footer small">This is a BETA version of Flatsome Page Builder. Always keep a backup of your page or enable revisions. You can disable it in Theme Options > Global. Got any feedback? Email: <a href="mailto:support@uxthemes.com?subject=[BUILDER] < Please keep [builder] in subject...">support@uxthemes.com</a></p>
 
   <!-- Include shortcodes adder -->
   <?php include_once('shortcodes_insert.php'); ?>
@@ -96,9 +99,15 @@ function ux_drag_and_drop_box( $post ) {
       </div>
     </div>
   </div>
+
+
+  
   
   <!-- New content fixer temp-->
   <div id="new-content" style="display:none;"></div>
+  
+  <!-- Quick preview content-->
+  <div id="quick-preview"></div>
   
   
 <?php
@@ -110,6 +119,7 @@ add_shortcode('text', 'add_ux_text_shortcode');
 
 // Get shortcode editor ajax
 add_action('wp_ajax_get_shortcode_editor', 'get_shortcode_editor');
+
 function get_shortcode_editor(){
     $shortcode_id =  $_POST["shortcode"];
       include_once('shortcodes_editor.php');
@@ -153,7 +163,7 @@ function ux_get_content_shortcodes() {
         preg_match('/\[(\[?)('.$name.')(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*(?:\[(?!\/\2\])[^\[]*)*)(\[\/\2\]))?)(\]?)/', $new_content, $matches);
         if(isset($matches[6]) && $matches[6] && $matches[6] != '[/text]'){
             // shortcodes with ending
-            $new_content = preg_replace('/\[(\[?)('.$name.')(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*(?:\[(?!\/\2\])[^\[]*)*)(\[\/\2\]))?)(\]?)/', '<div class="ux-g  ux-g-'.$name.'" data-id="'.$name.'"><s>[${2} <em class="ux-edit">${3}</em>]</s><div class="ux-g-group" data-group="'.$name.'">${5}</div> '.$tools.'<div class="ux-g-add"></div><s>${6}</s></div>', $new_content);
+            $new_content = preg_replace('/\[(\[?)('.$name.')(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*(?:\[(?!\/\2\])[^\[]*)*)(\[\/\2\]))?)(\]?)/', '<div class="ux-g  ux-g-'.$name.'" data-id="'.$name.'"><s>[${2} <em class="ux-edit">${3}</em>]</s><div class="ux-g-group" data-group="'.$name.'"><div class="drop-zone ux-g">Drop Zone</div>${5}</div> '.$tools.'<div class="ux-g-add"></div><s>${6}</s></div>', $new_content);
          } else if($name == 'embed' || $name == 'wp_caption' || $name == 'caption' || $name == 'gallery' || $name == 'playlist' || $name == 'audio' || $name == 'video'){
             // shortcodes as text
             $new_content = preg_replace('/\[(\[?)('.$name.')(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*(?:\[(?!\/\2\])[^\[]*)*)(\[\/\2\]))?)(\]?)/', '<div class="ux-g ux-g-text" data-id="text"><div class="ux-g-text-inner">${0}</div>'.$tools.'</div>', $new_content);

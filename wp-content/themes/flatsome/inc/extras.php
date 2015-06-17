@@ -10,7 +10,7 @@
 /* - Shortcode fixer
 /* - Hex 2 Rgb
 /* - Set default WooCommerce images
-/* - WooCommerc extra tabs
+/* - WooCommerce extra tabs
 /* - Enable SVG upload
 
 /**
@@ -34,22 +34,33 @@ function flatsome_body_classes( $classes ) {
   }
   
 	// add stikcy header class
-	if($flatsome_opt['header_sticky'] && !isset($_GET["shortcode"])){
+	if($flatsome_opt['header_sticky']){
 		$classes[] = 'sticky_header';
 	}	
 
-	if($flatsome_opt['breadcrumb_size']){
-		$classes[] = $flatsome_opt['breadcrumb_size'];
-	}	
-	
 	// add logo-center class
 	if($flatsome_opt['logo_position'] == 'center'){
 		$classes[] = 'logo-center';
 	}
 
-	if($flatsome_opt['catalog_mode_prices']){
-		$classes[] = 'no-prices';
-	}
+
+  if(ux_is_woocommerce_active()){
+      if($flatsome_opt['breadcrumb_size']){
+        $classes[] = $flatsome_opt['breadcrumb_size'];
+      } 
+
+      if(is_product() && $flatsome_opt['product_zoom']){
+        $classes[] = 'product-zoom';
+      }
+ 
+      if($flatsome_opt['catalog_mode_prices']){
+          $classes[] = 'no-prices';
+        }
+         if ( version_compare( WOOCOMMERCE_VERSION, '2.3', '>' ) ) {
+         $classes[] = 'wc-new';
+      }
+  } // End woocommerce active
+
 
 	// add boxed layout class if selected
 	if($flatsome_opt['body_layout']){
@@ -166,8 +177,7 @@ function bottom_text_taxonomy_edit_meta_field($term) {
   <th scope="row" valign="top"><label for="term_meta[cat_footer]"><?php _e( 'Bottom Content', 'flatsome' ); ?></label></th>
     <td>        
         <?php 
-
-        $content = esc_attr( $term_meta[0]['cat_footer'] ) ? esc_attr( $term_meta[0]['cat_footer'] ) : ''; 
+        $content = isset($term_meta[0]['cat_footer']) ? esc_attr( $term_meta[0]['cat_footer'] ) : '';
         echo '<textarea id="term_meta[cat_footer]" name="term_meta[cat_footer]">'.$content.'</textarea>'; ?>
       <p class="description"><?php _e( 'Enter a value for this field. Shortcodes are allowed. This will be displayed at bottom of the category.','flatsome' ); ?></p>
     </td>
@@ -484,31 +494,34 @@ function ux_formats_before_init( $settings ) {
 }
 
 
-/* Add HTML after Short description */
-if($flatsome_opt['html_before_add_to_cart']){
-	function before_add_to_cart_html(){
-		global $flatsome_opt;
-		echo do_shortcode($flatsome_opt['html_before_add_to_cart']);
-	}
-	add_action( 'woocommerce_single_product_summary', 'before_add_to_cart_html', 20);
+if(ux_is_woocommerce_active()){
+  /* Add HTML after Short description */
+  if($flatsome_opt['html_before_add_to_cart']){
+  	function before_add_to_cart_html(){
+  		global $flatsome_opt;
+  		echo do_shortcode($flatsome_opt['html_before_add_to_cart']);
+  	}
+  	add_action( 'woocommerce_single_product_summary', 'before_add_to_cart_html', 20);
 
-}
+  }
 
-if($flatsome_opt['html_after_add_to_cart']){
-	function after_add_to_cart_html(){
-		global $flatsome_opt;
-		echo do_shortcode($flatsome_opt['html_after_add_to_cart']);
-	}
-	add_action( 'woocommerce_single_product_summary', 'after_add_to_cart_html', 30);
-}
+  if($flatsome_opt['html_after_add_to_cart']){
+  	function after_add_to_cart_html(){
+  		global $flatsome_opt;
+  		echo do_shortcode($flatsome_opt['html_after_add_to_cart']);
+  	}
+  	add_action( 'woocommerce_single_product_summary', 'after_add_to_cart_html', 30);
+  }
 
-/* HTML AFTER CART */
-if($flatsome_opt['html_cart_footer']){
-	function html_cart_footer(){
-		global $flatsome_opt;
-		echo do_shortcode($flatsome_opt['html_cart_footer']);
-	}
-	add_action( 'woocommerce_after_cart', 'html_cart_footer', 0);
+  /* HTML AFTER CART */
+  if($flatsome_opt['html_cart_footer']){
+  	function html_cart_footer(){
+  		global $flatsome_opt;
+  		echo do_shortcode($flatsome_opt['html_cart_footer']);
+  	}
+  	add_action( 'woocommerce_after_cart', 'html_cart_footer', 0);
+  }
+
 }
 
 
@@ -524,7 +537,6 @@ function fixShortcode($content){
     );
     $content = strtr($content, $fix);
     $content = wpautop( preg_replace( '/<\/?p\>/', "\n", $content ) . "\n" );
-
 
     return do_shortcode( shortcode_unautop( $content) );
 }
@@ -667,16 +679,16 @@ function woo_new_product_tab( $tabs ) {
   global $wc_cpdf, $flatsome_opt;
   // Adds the new tab
   if($wc_cpdf->get_value(get_the_ID(), '_custom_tab_title')){
-  $tabs['ux_custom_tab'] = array(
-    'title'   => __(  $wc_cpdf->get_value(get_the_ID(), '_custom_tab_title'), 'flatsome' ),
-    'priority'  => 40,
-    'callback'  => 'ux_custom_tab_content'
-  );
+    $tabs['ux_custom_tab'] = array(
+      'title'   =>  $wc_cpdf->get_value(get_the_ID(), '_custom_tab_title'),
+      'priority'  => 40,
+      'callback'  => 'ux_custom_tab_content'
+    );
   }
 
   if($flatsome_opt['tab_title']){
   $tabs['ux_global_tab'] = array(
-    'title'   => __($flatsome_opt['tab_title'], 'flatsome' ),
+    'title'   => $flatsome_opt['tab_title'],
     'priority'  => 50,
     'callback'  => 'ux_global_tab_content'
   );
@@ -697,9 +709,104 @@ function ux_global_tab_content() {
   echo do_shortcode($flatsome_opt['tab_content']);
 }
 
+
+/* Insert custom header script */
+function flatsome_custom_header_js() {
+  global $flatsome_opt;
+  if($flatsome_opt['html_scripts_header'] && !is_admin()){
+    echo $flatsome_opt['html_scripts_header'];
+  }
+}
+add_action( 'wp_head', 'flatsome_custom_header_js');
+
+
+
 /* Enable SVG upload */
 function ux_enable_svg( $mimes ){
   $mimes['svg'] = 'image/svg+xml';
   return $mimes;
 }
 add_filter( 'upload_mimes', 'ux_enable_svg' );
+
+
+/* Simple Maintenance mode */
+
+if($flatsome_opt['maintenance_mode']){
+
+function flatsome_maintenance_mode_on_activation()  {
+  if ( ! current_user_can( 'activate_plugins' ) )
+  return;
+  $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
+  check_admin_referer( "activate-plugin_{$plugin}" );
+  
+    // Clear Cachify Cache
+    if ( has_action('cachify_flush_cache') ) {
+    do_action('cachify_flush_cache');
+    }
+    
+    // Clear Super Cache
+    if ( function_exists( 'wp_cache_clear_cache' ) ) {
+    ob_end_clean();
+    wp_cache_clear_cache();
+    }
+    
+    // Clear W3 Total Cache
+    if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+    ob_end_clean();
+    w3tc_pgcache_flush();
+    }
+}
+
+function flatsome_maintenance_mode_on_deactivation() {
+  if ( ! current_user_can( 'activate_plugins' ) )
+  return;
+  $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
+  check_admin_referer( "deactivate-plugin_{$plugin}" );
+  
+    // Clear Cachify Cache
+    if ( has_action('cachify_flush_cache') ) {
+    do_action('cachify_flush_cache');
+    }
+    
+    // Clear Super Cache
+    if ( function_exists( 'wp_cache_clear_cache' ) ) {
+    ob_end_clean();
+    wp_cache_clear_cache();
+    }
+    
+    // Clear W3 Total Cache
+    if ( function_exists( 'w3tc_pgcache_flush' ) ) {
+    ob_end_clean();
+    w3tc_pgcache_flush();
+  }
+}
+
+register_activation_hook(   __FILE__, 'flatsome_maintenance_mode_on_activation' );
+register_deactivation_hook( __FILE__, 'flatsome_maintenance_mode_on_deactivation' );
+
+/**
+ * Alert message when active
+*/
+$smm_active_message = __('<strong>Maintenance mode</strong> is <strong>active</strong>!', 'flatsome-maintenance-mode' );
+$smm_admin_notice = '<div id="message" class="error fade"><p>' . $smm_active_message . ' <a href="themes.php?page=optionsframework&tab=of-option-globalsettings">' . __( 'Deactivate it, when work is done.', 'flatsome-maintenance-mode' ) . '</a></p></div>';
+
+if ( is_multisite() && is_plugin_active_for_network( plugin_basename( __FILE__ ) ) )
+add_action( 'network_admin_notices', create_function( '', "echo '$smm_admin_notice';" ) ); 
+add_action( 'admin_notices', create_function( '', "echo '$smm_admin_notice';" ) ); 
+add_filter( 'login_message', create_function( '', "return '<div id=\"login_error\">$smm_active_message</div>';" ) );
+
+/**
+ * Maintenance message when active
+*/ 
+function flatsome_maintenance_mode()
+{
+  global $flatsome_opt;
+
+  nocache_headers();
+  if(!current_user_can('edit_themes') || !is_user_logged_in()) {
+  wp_die( '<center><img src="'.$flatsome_opt['site_logo'].'"/ style="max-width:200px;"><h2>' . __( 'Maintenance', 'flatsome-maintenance-mode' ) . '</h2><p>' . $flatsome_opt['maintenance_mode_text'] . '</p></center>', __( 'Maintenance', 'flatsome-maintenance-mode' ), array('response' => '503'));
+  }
+}
+add_action('get_header', 'flatsome_maintenance_mode');
+
+}

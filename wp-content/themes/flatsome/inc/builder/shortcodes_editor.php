@@ -45,6 +45,10 @@ $padding_margin = array(
     "100px" => "100px",
     "110px" => "110px",
     "120px" => "120px",
+    "130px" => "130px",
+    "140px" => "140px",
+    "150px" => "150px",
+    "160px" => "160px",
 );
 
 // animate
@@ -160,6 +164,11 @@ array(
   "type" => "textfield",
   "heading" => "Class",
   "param_name" => "class",
+  "value" => ""
+  ),array(
+  "type" => "textfield",
+  "heading" => "ID",
+  "param_name" => "id",
   "value" => ""
   ),array(
     "type" => "attach_image",
@@ -310,7 +319,14 @@ case 'row':
   "heading" => "Class",
   "param_name" => "class",
   "value" => ""
-  ));
+  ),array(
+  "type" => "textfield",
+  "class" => "",
+  "heading" => "ID",
+  "param_name" => "id",
+  "value" => ""
+  )
+  );
   break;
 
 case 'ux_banner': 
@@ -659,8 +675,20 @@ $options = array(
       "param_name" => "style",
       "value" => array(
         "Normal" => "normal",
+        "Box Style" => "text-boxed",
         "Text Bounce" => "text-bounce",
         "Text Overlay" => "text-overlay",
+      )
+    ),    array(
+      "type" => "dropdown",
+      "class" => "",
+      "heading" => "Type",
+      "admin_label" => true,
+      "param_name" => "type",
+      "value" => array(
+        "Slider" => "slider",
+        "Grid" => "grid",
+        "Masonry" => "masonry",
       )
     ),
 
@@ -688,11 +716,12 @@ $options = array(
       "value" => '6'
     ),
     array(
-      "type" => "checkbox",
+      "type" => "dropdown",
       "class" => "",
       "heading" => "Date box",
       "param_name" => "show_date",
-      "value" => array(
+     "value" => array(
+        "Show" => "true",
         "Hide" => "false",
       )
     ),
@@ -1079,6 +1108,26 @@ $options = array(
       "heading" => "padding",
       "param_name" => "padding",
       "value" => "20px"
+      ),
+        array(
+      "type" => "checkbox",
+      "heading" => "Auto open?",
+      "param_name" => "auto_open",
+      "value" => false
+      ),
+        array(
+      "type" => "textfield",
+      "heading" => "Auto open timer",
+      "param_name" => "auto_timer",
+      "description" => "After how many scounds should the lightbox open? 3000 = 3 secounds",
+      "value" => "3000"
+      ),
+         array(
+      "type" => "dropdown",
+      "heading" => "Auto show",
+      "param_name" => "auto_show",
+      "description" => "Should the lightbox always show or only once for each customer?",
+      "value" => array('Always' => 'always', 'Only Once' => 'once'),
       )
 
     );
@@ -1209,6 +1258,7 @@ $options =  array(
       "value" => array(
       "Badge (normal)" => "text-badge",
       "Text normal" => "text-normal",
+      "Box Style" => "text-boxed",
       "Text Overlay" => "text-overlay",
       "Text Bounce" => "text-bounce",   
       )
@@ -1582,7 +1632,14 @@ $options = array(
       "param_name" => "columns",
       "value" => 
           array('1' => '1','2' => '2','3' => '3','4' => '4'),
-    ),
+    ),array(
+      "type" => "checkbox",
+      "heading" => "Hide on Mobile",
+      "param_name" => "mobile",
+      "value" => array(
+        "Hide on mobile" => "false",
+        )
+      ),
      array(
       "type" => "dropdown",
       "heading" => "Content Top padding",
@@ -1669,6 +1726,7 @@ $options = array(
             "value" => array(
                 "Circle image (default)" => "text-circle",
                 "Square image" => "text-square",
+                "Box Style" => "text-boxed",
                 "Text Overlay" => "text-overlay",
                 "Text Bounce" => "text-bounce",
               ),
@@ -1951,6 +2009,12 @@ $options =array(
       "value" => "http://link" 
       ),
       array(
+      "type" => "textfield",
+      "heading" => "Button text",
+      "param_name" => "button_text",
+      "value" => "Shop now" 
+      ),
+      array(
       "type" => "checkbox",
       "heading" => "Featured",
       "admin_label" => true,
@@ -2139,10 +2203,14 @@ foreach ($options as $option) {
   else if ( $option['type'] == 'attach_image' ) { ?>
   <h3><?php echo $option['heading']; ?></h3>
   <div class="ux-option">
-  <div class="attach-image-upload" data-upload="<?php echo  $option['param_name'] ?>"><input data-id="<?php echo  $option['param_name'] ?>" placeholder="Enter image url or #hexcode"/><a href="#" class="button">Select</a></div>
+  <div class="attach-image-upload" data-upload="<?php echo  $option['param_name'] ?>">
+  <input data-id="<?php echo  $option['param_name'] ?>" placeholder="Enter image url or #hexcode"/><a href="#" class="button">Select</a>
+  </div>
   <small><?php if(isset($option['description'])) echo $option['description'];  ?></small>
+
   </div>
   <script>
+    /* upload image */
     jQuery('.attach-image-upload[data-upload="<?php echo  $option['param_name'] ?>"] a').click(function(){
         ux_UploadImage('.attach-image-upload[data-upload="<?php echo  $option['param_name'] ?>"]');
     });
@@ -2289,7 +2357,7 @@ foreach ($options as $option) {
   else if ( $option['type'] == 'image_select' ) { ?>
       <h3><?php echo $option['heading']; ?></h3>
       <div class="ux-option">
-       <div class="ux-image-select" data-images="<?php echo  $option['param_name'] ?>">  
+       <div class="ux-image-select" data-images="<?php echo  $option['param_name'] ?>">
           <input data-id="<?php echo  $option['param_name'] ?>" style="display:none;" />
           <?php foreach ($option['value'] as $value => $key) {
             echo '<a href="#" data-select="'.$key.'"><img src="'.$value.'"/></a>';

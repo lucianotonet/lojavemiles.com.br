@@ -129,14 +129,14 @@ $attachment_ids = $product->get_gallery_attachment_ids();
 					
 				?>
              
-                <div class="slide">
+                <div class="slide easyzoom">
                 	<a href="<?php echo $src[0] ?>"  title="<?php echo $src_title; ?>">
                 	<img itemprop="image" src="<?php echo $src_small[0]; ?>" alt="<?php echo $src_title; ?>" title="<?php echo $src_title; ?>" />
-                		<div class="zoom-button large icon-expand tip-top hide-for-small" title="Zoom"></div>
+                		<div class="zoom-button large icon-expand tip-top hide-for-small" title="<?php echo __( 'Zoom', 'flatsome' ); ?>"></div>
                 	</a>
                 </div>
 				
-				<?php } else { echo '<div class="slide"><img src="'.wc_placeholder_img_src().'" title="'.get_the_title().'" alt="'.get_the_title().'"/></div>';} ?>
+				<?php } else { echo '<div class="slide easyzoom"><img src="'.wc_placeholder_img_src().'" title="'.get_the_title().'" alt="'.get_the_title().'"/></div>';} ?>
                 
 				<?php
 
@@ -164,7 +164,7 @@ $attachment_ids = $product->get_gallery_attachment_ids();
 							$image_class = esc_attr( implode( ' ', $classes ) );
 							$image_title = esc_attr( get_the_title( $attachment_id ) );
 							
-							printf( '<div class="slide"><a href="%s" title="%s"><span>%s</span><div class="zoom-button large icon-expand tip-top hide-for-small" title="Zoom"></div></a></div>', wp_get_attachment_url( $attachment_id ),get_post($attachment_id)->post_title, wp_get_attachment_image( $attachment_id, apply_filters( 'single_product_large_thumbnail_size', 'shop_single' ) ) );
+							printf( '<div class="slide easyzoom"><a href="%s" title="%s"><span>%s</span><div class="zoom-button large icon-expand tip-top hide-for-small" title="Zoom"></div></a></div>', wp_get_attachment_url( $attachment_id ),get_post($attachment_id)->post_title, wp_get_attachment_image( $attachment_id, apply_filters( 'single_product_large_thumbnail_size', 'shop_single' ) ) );
 							
 							$loop++;
 						}

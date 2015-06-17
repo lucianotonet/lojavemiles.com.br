@@ -55,7 +55,7 @@ echo '<li><a href="?cat='.$tax_term->slug.'" class="'.$cur_class.'">'.$tax_term-
 						<h1>Browse Blocks</h1>
 						<p class="lead">Blocks are collections of Shortcodes<br> that can be inserted anywhere by using a shortcode</p>
 
-				<? } ?>
+				<?php } ?>
 			
 
 				<?php

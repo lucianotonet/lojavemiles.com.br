@@ -29,13 +29,21 @@ get_header('shop'); ?>
 		<?php while ( have_posts() ) : the_post(); ?>
 
 		<?php 
-		if($flatsome_opt['product_sidebar'] == "right_sidebar") {
-			woocommerce_get_template_part( 'content', 'single-product-rightcol'); 
-		} else if($flatsome_opt['product_sidebar'] == "left_sidebar") {
-			woocommerce_get_template_part( 'content', 'single-product-leftcol'); 
-		} else {
-			woocommerce_get_template_part( 'content', 'single-product' ); 
-		}
+			if($flatsome_opt['product_sidebar'] == "right_sidebar") {
+				woocommerce_get_template_part( 'content', 'single-product-rightcol'); 
+
+			} else if($flatsome_opt['product_sidebar'] == "right_sidebar_fullheight") {
+				woocommerce_get_template_part( 'content', 'single-product-rightcol-fullheight'); 
+
+				} else if($flatsome_opt['product_sidebar'] == "full_width") {
+				woocommerce_get_template_part( 'content', 'single-product-fullwidth'); 
+
+			} else if($flatsome_opt['product_sidebar'] == "left_sidebar") {
+				woocommerce_get_template_part( 'content', 'single-product-leftcol'); 
+
+			} else {
+				woocommerce_get_template_part( 'content', 'single-product' ); 
+			}
 		?>
 
 		<?php endwhile; // end of the loop. ?>

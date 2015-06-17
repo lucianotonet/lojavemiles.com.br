@@ -2,11 +2,22 @@
 html[data-uxbuilder="disabled"] #ux_drag_and_drop, html[data-uxbuilder="enabled"] #postdivrich{display: none!important;}
 html[data-uxbuilder="enabled"] #ux_drag_and_drop, html[data-uxbuilder="disabled"] #postdivrich{display: block!important}
 
+.nav-tab.nav-tab-active{
+	background: rgba(255,255,255,1);
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,0.53) 47%, rgba(255,255,255,0) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(246,246,246,0.53)), color-stop(100%, rgba(255,255,255,0)));
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,0.53) 47%, rgba(255,255,255,0) 100%);
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,0.53) 47%, rgba(255,255,255,0) 100%);
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(246,246,246,0.53) 47%, rgba(255,255,255,0) 100%);
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(246,246,246,0.53) 47%, rgba(255,255,255,0) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0 );
+}
+
 #ux_drag_and_drop .inside{margin:0;padding:0;}
 #ux_drag_and_drop h3.hndle em, #ux_drag_and_drop_enable h3.hndle em{background-color: #9fdcf2; color:#FFF; font-weight: normal;padding: 0 5px;} 
 #drag-and-drop{font-size: 100%;width:100%;background-color: #f4f4f4;}
 #drag-and-drop *{-webkit-box-sizing: border-box;  -moz-box-sizing: border-box; box-sizing: border-box;}
-.drag-drop-content{padding:5px 15px;min-height: 20px}
+.drag-drop-content{padding:5px 15px!important;min-height: 20px}
 .ux-add-elements-wrap{padding:10px 15px;}
 #uxbuilder-enable-disable.disabled{opacity: 0.5; pointer-events:none;}
 
@@ -18,10 +29,11 @@ p.ux-builder-footer a{color:#666;text-decoration: none;}
 .ux-g{box-shadow: 0 1px 1px rgba(0,0,0,.04); padding:15px; border:1px solid #dfdfdf; background-color:#fff; width:100%;}
 .ux-g .ux-g{background-color:#f9f9f9;}
 .ux-g .ux-g .ux-g{background-color:#fff; }
-.ux-g.ui-sortable-placeholder{background: #2ea2cc!important;visibility: visible!important;opacity: 0.1!important;}
 .ux-g.ux-g-small{padding:10px;}
+.ux-g.ui-sortable-placeholder{background: #2ea2cc!important; visibility: visible!important;opacity: 0.3!important;}
+.ux-g.ui-sortable-helper{opacity: 0.8}
 .ux-g.active{border:1px solid #999!important;}
-.ux-g-group:empty{min-height: 10px;}
+
 
 /* columns */
 .ux-g[class*='span'],.ux-g[data-id="col"],.ux-g[data-id="vc_column"],.ux-g[data-id="vc_column_inner"]{display: inline-block;border-style: dashed!important;width:100%;}
@@ -50,10 +62,16 @@ p.ux-builder-footer a{color:#666;text-decoration: none;}
 .ux-g s .edit-shortcode strong{font-weight: normal;}
 .ux-g s input{padding: 0;font-size: 95%;line-height: 80%;min-width: 20px!important}
 
-.ux-g-add{border-top: 1px solid dashed; height:7px;-webkit-border-radius: 10px; -webkit-transition: background-color 0.2s; color:#999; cursor:pointer; line-height: 10px; background-color: rgba(0,0,0,.05); border-top:2px solid dotted; display: block;opacity:0;position: relative;}
+.ux-g > s > textarea{display: block;width:100%!important;height:20px;border:0;background-color: transparent;}
+
+
+.ux-g-add{border-top: 1px solid dashed; height:7px;-webkit-border-radius: 10px; -webkit-transition: background-color 0.2s; color:#999; cursor:pointer; line-height: 10px; background-color: #ccc; border-top:2px solid dotted; display: block;opacity:0;position: relative;}
 .ux-g.active > .ux-g-add{opacity: 1;padding:0px;}
 .ux-g-add:hover{background-color: #2ea2cc; color:#FFF;}
 .ux-g-add span{display: inline-block;font-weight: bold;}
+
+.ux-g-add:after{content: "+";  line-height: 20px; margin-left:-10px; display: block; padding:0; z-index:999; width:20px; height:20px; text-align: center; top:-6px; background-color: #ccc; border-radius:99px; position: absolute; left:50%; color:#FFF;}
+.ux-g-add:hover:after{background-color: #2ea2cc;  }
 
 .ux-add-elements-wrap .ux-g-add{opacity: 1;}
 
@@ -84,6 +102,12 @@ ul.ux-add-list li ul{display: none;position: absolute;top:0;left:0;padding: 20px
 /* elements */
 .ux-element{display: inline-block; border:1px solid #ddd; padding:5px; margin:0 5px 5px 0;}
 .ux-g-text [data-action="edit"]{display: none;}
+
+
+/* drop zone */
+.ux-g.drop-zone{padding:0px!important;pointer-events:none;opacity: 0;  text-align:center;height:0px; margin:0; overflow: hidden; transition: all 0.05s;background:none!important; background-color: transparent!important; color: #9fdcf2!important;}
+.ux-g.drop-zone:only-of-type{padding: 20px!important;border: 3px dashed #9fdcf2!important; margin-bottom: 3px; }
+.ux-g:only-of-type{display: block!important;height:auto;opacity: 0.8;}
 
 
 /* Lightbox */
@@ -125,6 +149,7 @@ ul.ux-add-list li ul{display: none;position: absolute;top:0;left:0;padding: 20px
 .ux-shortcode-group .ux-image-select a img{width: 100%;}
 .ux-shortcode-group .ux-image-select a.selected{border:1px solid #000;}
 
+
 .ux-current-shortcode{padding:10px 30px;}
 
 .ux-current-shortcode textarea{height:35px;width:100%;background-color: #f9f9f9}
@@ -135,7 +160,7 @@ iframe.block-iframe{width:100%;height:400px;}
 .ux-g-text-inner{overflow: hidden;}
 .ux-g .aligncenter{text-align: center; }
 .ux-g .size-full{width:100%;height:auto!important;}
-.ux-g img{max-width: 100%; margin-bottom:15px;}
+.ux-g img{max-width: 100%; margin-bottom:15px;height:auto!important;width:auto!important;}
 .ux-g img.alignleft{margin-right: 15px;}
 .ux-g img.alignright{margin-left: 15px;}
 .ux-g p, .ux-g h1,.ux-g h2,.ux-g h3,.ux-g h4,.ux-g h5,.ux-g h6{border:0!important;padding:0!important;line-height: 100%!important;margin:0!important;margin-bottom: 5px!important}
@@ -144,10 +169,8 @@ iframe.block-iframe{width:100%;height:400px;}
 .ux-g[data-id="divider"], .ux-g[data-id="button"]{padding:10px}
 
 /* clean inner shortcodes */
-.ux-g[data-id="ux_banner"] .ux-g{background-color: transparent!important;margin: 0;padding:5px;border-color:transparent!important;box-shadow: none!important}
+.ux-g[data-id="ux_banner"] .ux-g{padding:5px;box-shadow: none!important}
 .ux-g[data-id="ux_banner"] .ux-g:hover{border:1px dashed #ccc!important;}
 
 .ux-g[data-id="text"] {padding: 10px;font-size: 90%;}
 .ux-g[data-id="text"] s,.ux-g[data-id="text"] .ux-g-add{display: none;}
-
-

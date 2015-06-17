@@ -10,7 +10,7 @@ if (!function_exists('of_options'))
 		$of_categories 		= array();  
 		$of_categories_obj 	= get_categories('hide_empty=0');
 		foreach ($of_categories_obj as $of_cat) {
-		    $of_categories[$of_cat->cat_ID] = $of_cat->cat_name;}
+		$of_categories[$of_cat->cat_ID] = $of_cat->cat_name;}
 		$categories_tmp 	= array_unshift($of_categories, "Select a category:");
 
 		// Presets URL
@@ -22,60 +22,11 @@ if (!function_exists('of_options'))
 		$of_pages_obj 		= get_pages('sort_column=post_parent,menu_order');
 		$of_pages['0'] = 'Select a page:';
 		foreach ($of_pages_obj as $of_page) {
-		    $of_pages[$of_page->ID] = $of_page->post_name; }
+		    $of_pages[$of_page->post_name] = $of_page->post_title; }
 	
 		//Testing 
 		$of_options_select 	= array("one","two","three","four","five"); 
 		$of_options_radio 	= array("one" => "One","two" => "Two","three" => "Three","four" => "Four","five" => "Five");
-		
-		//Sample Homepage blocks for the layout manager (sorter)
-		$of_options_homepage_blocks = array
-		( 
-			"disabled" => array (
-				"placebo" 		=> "placebo", //REQUIRED!
-				"block_one"		=> "Block One",
-				"block_two"		=> "Block Two",
-				"block_three"	=> "Block Three",
-			), 
-			"enabled" => array (
-				"placebo" 		=> "placebo", //REQUIRED!
-				"block_four"	=> "Block Four",
-			),
-		);
-
-		//Stylesheets Reader
-		$alt_stylesheet_path = LAYOUT_PATH;
-		$alt_stylesheets = array();
-		
-		if ( is_dir($alt_stylesheet_path) ) 
-		{
-		    if ($alt_stylesheet_dir = opendir($alt_stylesheet_path) ) 
-		    { 
-		        while ( ($alt_stylesheet_file = readdir($alt_stylesheet_dir)) !== false ) 
-		        {
-		            if(stristr($alt_stylesheet_file, ".css") !== false)
-		            {
-		                $alt_stylesheets[] = $alt_stylesheet_file;
-		            }
-		        }    
-		    }
-		}
-
-
-		//Background Images Reader
-		$bg_images_path = STYLESHEETPATH. '/images/bg/'; // change this to where you store your bg images
-		$bg_images_url = get_bloginfo('template_url').'/images/bg/'; // change this to where you store your bg images
-		$bg_images = array();
-		
-		if ( is_dir($bg_images_path) ) {
-		    if ($bg_images_dir = opendir($bg_images_path) ) { 
-		        while ( ($bg_images_file = readdir($bg_images_dir)) !== false ) {
-		            if(stristr($bg_images_file, ".png") !== false || stristr($bg_images_file, ".jpg") !== false) {
-		                $bg_images[] = $bg_images_url . $bg_images_file;
-		            }
-		        }    
-		    }
-		}
 		
 
 		/*-----------------------------------------------------------------------------------*/
@@ -277,6 +228,7 @@ if (!function_exists('of_options'))
 						'Fjord One' => 'Fjord One',
 						'Flamenco' => 'Flamenco',
 						'Flavors' => 'Flavors',
+						'Fira Mono' => 'Fira Mono',
 						'Fondamento' => 'Fondamento',
 						'Fontdiner Swanky' => 'Fontdiner Swanky',
 						'Forum' => 'Forum',
@@ -530,7 +482,9 @@ if (!function_exists('of_options'))
 						'Ribeye Marrow' => 'Ribeye Marrow',
 						'Righteous' => 'Righteous',
 						'Roboto' => 'Roboto',
+						'Roboto Condensed' => 'Roboto Condensed',
 						'Roboto Sans' => 'Roboto Sans',
+						'Roboto Slab' => 'Roboto Slab',
 						'Rochester' => 'Rochester',
 						'Rock Salt' => 'Rock Salt',
 						'Rokkitt' => 'Rokkitt',
@@ -641,13 +595,6 @@ if (!function_exists('of_options'))
 
 
 
-		// Image Alignment radio box
-		$of_options_thumb_align = array("alignleft" => "Left","alignright" => "Right","aligncenter" => "Center"); 
-		
-		// Image Links to Options
-		$of_options_image_link_to = array("image" => "The Image","post" => "The Post"); 
-
-
 /*-----------------------------------------------------------------------------------*/
 /* The Options Array */
 /*-----------------------------------------------------------------------------------*/
@@ -655,6 +602,84 @@ if (!function_exists('of_options'))
 // Set the Options Array
 global $of_options;
 $of_options = array();
+
+$url =  ADMIN_DIR . 'assets/images/';
+
+
+$of_options[] = array( 	"name" 		=> "Global settings",
+						"type" 		=> "heading",
+);
+
+
+$of_options[] = array( 	"name" 		=> "Enable minified CSS and JS",
+						"id" 		=> "minified_flatsome",
+						"desc"      => "Speed up your site by enable the minified CSS and Javscript of flatsome. <strong>NB!</strong> style.css will not be loaded. Custom styles needs to be placed in Theme Option > HTML Blocks > Custom CSS.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Flatsome Builder Beta",
+						"id" 		=> "flatsome_builder",
+						"desc"      => "Enable Flatsome Builder Beta.",
+						"std" 		=> 1,
+						"type" 		=> "checkbox"
+);
+
+$of_options[] = array( 	"name" 		=> "Maintenance Mode",
+						"id" 		=> "maintenance_mode",
+						"desc"      => "Enable Maintenance Mode for all users except admins.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Maintenance Mode Text",
+						"desc" 		=> "The text that will be visible to your customers when accessing maintenance screen.",
+						"id" 		=> "maintenance_mode_text",
+						"std"       => "Please check back soon..",
+						"type" 		=> "text"
+);
+
+
+
+
+$of_options[] = array( 	"name" 		=> "Header Scripts",
+						"desc" 		=> "Add custom scripts inside HEAD tag. You need to have SCRIPT tag around the scripts.",
+						"id" 		=> "html_scripts_header",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+$of_options[] = array( 	"name" 		=> "Footer Scripts",
+						"desc" 		=> "Here is the place to paste your Google Analytics code or any other JS code you might want to add to be loaded in the footer of your website.",
+						"id" 		=> "html_scripts_footer",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Custom CSS",
+						"type" 		=> "heading"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Custom CSS ",
+						"desc" 		=> "Add custom CSS here",
+						"id" 		=> "html_custom_css",
+						"std" 		=> "div {}",
+						"type" 		=> "textarea"
+);
+
+$of_options[] = array( 	"name" 		=> "Custom CSS (Mobile only)",
+						"desc" 		=> "Add custom CSS here for mobile view",
+						"id" 		=> "html_custom_css_mobile",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+
 
 
 // GENERAL //
@@ -697,6 +722,19 @@ $of_options[] = array( 	"name" 		=> "Dark Logo",
 						"std" 		=> "",
 						"type" 		=> "media"
 );
+
+$of_options[] = array( 	"name" 		=> "Sticky Logo",
+						"desc" 		=> "Upload custom sticky header logo",
+						"id" 		=> "site_logo_sticky",
+						"std" 		=> "",
+						"type" 		=> "media"
+);
+
+
+
+
+
+
 
 
 
@@ -779,16 +817,26 @@ $of_options[] = array( 	"name" 		=> "Header",
 );
 
 
-/*
+
 $of_options[] = array( 	"name" 		=> "Header preset",
-						"desc" 		=> "Select hader",
 						"id" 		=> "header_preset",
 						"type" 		=> "presets",
 						"options" 	=> array(
 										$preset_url.'/headers/header1.jpg' => "header_1",
+										$preset_url.'/headers/header1_2.jpg' => "header_1_2",
+										$preset_url.'/headers/header1_3.jpg' => "header_1_3",
+										$preset_url.'/headers/header1_4.jpg' => "header_1_4",
+										$preset_url.'/headers/header1_5.jpg' => "header_1_5",
+										$preset_url.'/headers/header6.jpg' => "header_6",
 										$preset_url.'/headers/header2.jpg' => "header_2",
+										$preset_url.'/headers/header3.jpg' => "header_3",
+										$preset_url.'/headers/header3_1.jpg' => "header_3_1",
+										$preset_url.'/headers/header3_2.jpg' => "header_3_2",
+										$preset_url.'/headers/header5.jpg' => "header_5",
+										$preset_url.'/headers/header5_2.jpg' => "header_5_2",
+
 						)
-);  */
+);  
 
 
 
@@ -798,7 +846,7 @@ $of_options[] = array( 	"name" 		=> "Header height",
 						"std" 		=> "120",
 						"min" 		=> "50",
 						"step"		=> "1",
-						"max" 		=> "240",
+						"max" 		=> "450",
 						"type" 		=> "sliderui" 
 );
 
@@ -809,7 +857,7 @@ $of_options[] = array( 	"name" 		=> "Logo container width",
 						"std" 		=> "210",
 						"min" 		=> "90",
 						"step"		=> "1",
-						"max" 		=> "450",
+						"max" 		=> "700",
 						"type" 		=> "sliderui" 
 );
 
@@ -869,20 +917,34 @@ $of_options[] = array( 	"name" 		=> "Main Navigation Size",
 
 
 
-
-$of_options[] = array( 	"name" 		=> "Show login/My account link",
+$of_options[] = array( 	"name" 		=> "Show My Account dropdown",
 						"desc" 		=> "Show my account / login link in header",
 						"id" 		=> "myaccount_dropdown",
+						"type"		=> "select",
 						"std" 		=> 1,
-						"type" 		=> "checkbox"
+						"options" 	=> array(
+							0 => "Hide",
+							1 => "Header Main - Right",
+							'top_bar' => "Top bar - Right",
+						)
 );
+
+
+
 
 $of_options[] = array( 	"name" 		=> "Show Mini Cart",
 						"desc" 		=> "Show cart in header (Requires WooCommerce)",
 						"id" 		=> "show_cart",
+						"type"		=> "select",
 						"std" 		=> 1,
-						"type" 		=> "checkbox"
+						"options" 	=> array(
+							0 => "Hide",
+							1 => "Header Main - Right",
+							'top_bar' => "Top bar - Right",
+						)
 );
+
+
 
 $of_options[] = array( 	"name" 		=> "Show Right Content",
 						"desc" 		=> "Add HTML or shortcodes here that will show beside Cart and My Account links or replace them.<br> <br>You could use these: <br><strong>[follow facebook='#' twitter='#' instagram='#']<br> [header_button text='Shop now' tooltip='' link='http://#' border='2px']<br> [phone number='+00 000 000' border='2px' tooltip='Contact us today']<br>[search] <br> [share] </strong>",
@@ -965,9 +1027,17 @@ $of_options[] = array( 	"name" 		=> "Top Bar BG color",
 );
 
 $of_options[] = array( 	"name" 	=> "Top bar left",
-				"desc" 		=> "Insert text for left top bar.",
+				"desc" 		=> "Insert text or shortcodes here",
 				"id" 		=> "topbar_left",
 				"std" 		=> "Add anything here here or just remove it..",
+				"type" 		=> "text"
+);
+
+
+$of_options[] = array( 	"name" 	=> "Top bar right",
+				"desc" 		=> "Insert text or shortcodes here",
+				"id" 		=> "topbar_right",
+				"std" 		=> "",
 				"type" 		=> "text"
 );
 
@@ -1007,11 +1077,28 @@ $of_options[] = array( 	"name" 		=> "Full width Nav - Top content",
 );
 
 
+$of_options[] = array( 	"name" 		=> "After header HTML",
+						"desc" 		=> "Enter HTML that should be placed after header here. Shortcodes are allowed.",
+						"id" 		=> "html_after_header",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+$of_options[] = array( 	"name" 		=> "Homepage Intro HTML",
+						"desc" 		=> "Enter HTML that would be placed before header on homepage. Use for Intro images, slides etc.",
+						"id" 		=> "html_intro",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+
 
 
 $of_options[] = array( 	"name" 		=> "Footer",
 						"type" 		=> "heading"
 );
+
 
 $of_options[] = array( 	"name" 		=> "Footer bottom left content (copyright text)",
 				"desc" 		=> "Insert text/html for left footer content",
@@ -1026,6 +1113,9 @@ $of_options[] = array( 	"name" 		=> "Footer bottom right content",
 				"std" 		=> "",
 				"type" 		=> "textarea"
 );
+
+
+
 
 
 $of_options[] = array( 	"name" 		=> "Footer 1 text color",
@@ -1048,6 +1138,30 @@ $of_options[] = array( 	"name" 		=> "Footer 1 BG color",
 );
 
 
+$of_options[] = array( 	"name" 		=> "Footer 1 BG image",
+						"id" 		=> "footer_1_bg_image",
+						"std" 		=> "",
+						"type" 		=> "media"
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Footer 1 columns",
+						"desc" 		=> "",
+						"id" 		=> "footer_1_columns",
+						"std" 		=> "large-3",
+						"type" 		=> "select",
+						"options" 	=> array(
+										"large-2" => "6",
+										"large-3" => "4",
+										"large-4" => "3",
+										"large-6" => "2",
+										"large-12" => "1"
+						)
+);
+
+
+
 
 $of_options[] = array( 	"name" 		=> "Footer 2 text color",
 						"desc" 		=> "Light or Dark text color",
@@ -1066,6 +1180,27 @@ $of_options[] = array( 	"name" 		=> "Footer 2 BG color",
 						"id" 		=> "footer_2_bg_color",
 						"std" 		=> "#777",
 						"type" 		=> "color"
+);
+
+$of_options[] = array( 	"name" 		=> "Footer 2 BG image",
+						"id" 		=> "footer_2_bg_image",
+						"std" 		=> "",
+						"type" 		=> "media"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Footer 2 columns",
+						"desc" 		=> "",
+						"id" 		=> "footer_2_columns",
+						"std" 		=> "large-3",
+						"type" 		=> "select",
+						"options" 	=> array(
+										"large-2" => "6",
+										"large-3" => "4",
+										"large-4" => "3",
+										"large-6" => "2",
+										"large-12" => "1"
+						)
 );
 
 
@@ -1089,9 +1224,24 @@ $of_options[] = array( 	"name" 		=> "Footer bottom bar BG color",
 );
 
 
+$of_options[] = array( 	"name" 		=> "HTML before footer",
+						"desc" 		=> "Enter HTML for footer here. Shortcodes are allowed. F.ex [block id='payments']",
+						"id" 		=> "html_before_footer",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+$of_options[] = array( 	"name" 		=> "HTML after footer",
+						"desc" 		=> "Enter HTML for footer here. Shortcodes are allowed. F.ex [block id='payments']",
+						"id" 		=> "html_after_footer",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
 
 // TYPE 
-
 $of_options[] = array( 	"name" 		=> "Fonts",
 						"type" 		=> "heading"
 );
@@ -1202,6 +1352,8 @@ $of_options[] = array( 	"name" 		=> "Default link color",
 );
 
 
+if(ux_is_woocommerce_active()) {
+
 $of_options[] = array( 	"name" 		=> "Add to cart / Checkout buttons",
 						"desc" 		=> "Change color for checkout buttons. Default is Secondary color",
 						"id" 		=> "color_checkout",
@@ -1217,6 +1369,13 @@ $of_options[] = array( 	"name" 		=> "Sale bubble",
 						"type" 		=> "color"
 );
 
+$of_options[] = array( 	"name" 		=> "New bubble",
+						"desc" 		=> "Change color of the 'New' bubble.",
+						"id" 		=> "color_new_bubble",
+						"std" 		=> "#7a9c59",
+						"type" 		=> "color"
+);
+
 $of_options[] = array( 	"name" 		=> "Review Stars",
 						"desc" 		=> "Change color of review stars",
 						"id" 		=> "color_review",
@@ -1224,6 +1383,7 @@ $of_options[] = array( 	"name" 		=> "Review Stars",
 						"type" 		=> "color"
 );
 
+} // End  WooCommerce
 
 
 
@@ -1277,17 +1437,58 @@ $of_options[] = array( 	"name" 		=> "Dropdown Text Color",
 );
 
 
-
+if(ux_is_woocommerce_active()) {
+	// ONLY FOR WOOCOMMERCE
 
 $of_options[] = array( 	"name" 		=> "Product Page",
 						"type" 		=> "heading",
 );
+
+$of_options[] = array( 	"name" 		=> "Product Page layout",
+						"desc" 		=> "",
+						"id" 		=> "product_sidebar",
+						"std" 		=> "no_sidebar",
+						"type" 		=> "select",
+						"options" 	=> array(
+										"no_sidebar" => "No Sidebar",
+										"full_width" => "Full Width",
+										"left_sidebar" => "Left Sidebar",
+										"right_sidebar" => "Right Sidebar",
+										"right_sidebar_fullheight" => "Right Sidebar - Full height"
+						)
+);
+
+
+$of_options[] = array( 	"name" 		=> "Product Info style",
+						"desc" 		=> "Select how you want to display product info...",
+						"id" 		=> "product_display",
+						"std" 		=> "tabs",
+						"type" 		=> "select",
+
+						"options" 	=> array(
+										"tabs" => "Tabs",
+										"tabs_center" => "Tabs Center",
+										"tabs_pills" => "Tabs (Pills style. NEW!)",
+										"sections" => "Sections",
+										"accordian" => "Accordian",
+										"tabs_vertical" => "Vertical tabs"
+
+						)
+);
+
 
 
 $of_options[] = array( 	"name" 		=> "Show Cart dropdown when product is added to cart",
 						"id" 		=> "cart_dropdown_show",
 						"desc"      => "Show Mini-cart dropdown after product is added to cart.",
 						"std" 		=> 1,
+						"type" 		=> "checkbox"
+);
+
+$of_options[] = array( 	"name" 		=> "Show 'In Stock' text",
+						"id" 		=> "show_in_stock",
+						"desc"      => "Show 'In stock' text on product page if product is in stock.",
+						"std" 		=> 0,
 						"type" 		=> "checkbox"
 );
 
@@ -1299,17 +1500,15 @@ $of_options[] = array( 	"name" 		=> "Up-sell title",
 );
 
 
-$of_options[] = array( 	"name" 		=> "Product Sidebar",
-						"desc" 		=> "",
-						"id" 		=> "product_sidebar",
-						"std" 		=> "no_sidebar",
-						"type" 		=> "select",
-						"options" 	=> array(
-										"no_sidebar" => "No sidebar",
-										"left_sidebar" => "Left Sidebar",
-										"right_sidebar" => "Right Sidebar"
-						)
+$of_options[] = array( 	"name" 		=> "Product Image Zoom (NEW)",
+						"id" 		=> "product_zoom",
+						"desc"      => "Enable zoom on product images when you hover your mouse.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
 );
+
+
+
 
 $of_options[] = array( 	"name" 		=> "Related Products",
 						"desc" 		=> "",
@@ -1346,22 +1545,7 @@ $of_options[] = array( 	"name" 		=> "Max number of related products",
 );
 
 
-$of_options[] = array( 	"name" 		=> "Product info style",
-						"desc" 		=> "Select how you want to display product info...",
-						"id" 		=> "product_display",
-						"std" 		=> "tabs",
-						"type" 		=> "select",
 
-						"options" 	=> array(
-										"tabs" => "Tabs",
-										"tabs_center" => "Tabs Center",
-										"tabs_pills" => "Tabs (Pills style. NEW!)",
-										"sections" => "Sections",
-										"accordian" => "Accordian",
-										"tabs_vertical" => "Vertical tabs"
-
-						)
-);
 
 
 $of_options[] = array( 	"name"  => "Additional Global tab/section title",
@@ -1385,6 +1569,21 @@ $of_options[] = array( 	"name" 		=> "Disable product gallery scrollbar",
 						"type" 		=> "checkbox"
 );
 
+$of_options[] = array( 	"name" 		=> "HTML before Add To Cart button (Global)",
+						"desc" 		=> "Enter HTML and shortcodes that will show before Add to cart selections.",
+						"id" 		=> "html_before_add_to_cart",
+						"std" 		=> " ",
+						"type" 		=> "textarea"
+);
+
+
+$of_options[] = array( 	"name" 		=> "HTML after Add To Cart button (Global)",
+						"desc" 		=> "Enter HTML and shortcodes that will show after Add to cart button.",
+						"id" 		=> "html_after_add_to_cart",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
 
 
 $of_options[] = array( 	"name" 		=> "Category Page",
@@ -1392,34 +1591,90 @@ $of_options[] = array( 	"name" 		=> "Category Page",
 );
 
 
+$of_options[] = array( 	"name" 		=> "Shop header",
+						"desc" 		=> "Enter HTML that should be placed on top of main shop page. Shortcodes are allowed. ",
+						"id" 		=> "html_shop_page",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
 $of_options[] = array( 	"name" 		=> "Shop sidebar",
 						"desc" 		=> "Select if you want a sidebar on product categories.",
 						"id" 		=> "category_sidebar",
 						"std" 		=> "left-sidebar",
-						"type" 		=> "select",
-
+						"type" 		=> "images",
 						"options" 	=> array(
-										"none" => "No sidebar",//please, always use this key: "none"
-										"left-sidebar" => "Left sidebar",
-										"right-sidebar" => "Right sidebar",
-
+								'none' 	=> $url . 'shop-no-sidebar.gif',
+								'left-sidebar' 	=> $url . 'shop-left-sidebar.gif',
+								'right-sidebar' 	=> $url . 'shop-right-sidebar.gif',
+								'off-canvas' 	=> $url . 'shop-off-canvas.gif',	
 						)
 );
 
 
-$url =  ADMIN_DIR . 'assets/images/';
 $of_options[] = array( 	"name" 		=> "Product Grid style",
 						"desc" 		=> "Select product grid style",
 						"id" 		=> "grid_style",
 						"std" 		=> "grid1",
 						"type" 		=> "images",
 						"options" 	=> array(
-											'grid1' 	=> $url . 'grid1.gif',
-											'grid2' 	=> $url . 'grid2.gif',
-											'grid3' 	=> $url . 'grid3.gif',
+								'grid1' 	=> $url . 'grid1.gif',
+								'grid2' 	=> $url . 'grid2.gif',
+								'grid3' 	=> $url . 'grid3.gif',
 									
 						)
 );
+
+
+
+$of_options[] = array( 	"name" 		=> "Product Grid Frame Style",
+						"desc" 		=> "Select product grid frame style",
+						"id" 		=> "grid_frame",
+						"std" 		=> "normal",
+						"type" 		=> "images",
+						"options" 	=> array(
+											'normal' 	=> $url . 'grid-normal.gif',
+											'frame' 	=> $url . 'grid-frame.gif',
+											'boxed' 	=> $url . 'grid-box.gif',
+
+						)
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Masonry Grid (NEW)",
+						"id" 		=> "masonry_grid",
+						"desc"      => "Display products as a Masonry Grid (Pinterest style) ",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Add to cart button in grid", 
+						"desc" 		=> "Add cart icon in grid. Choose between a Icon or a button",
+						"id" 		=> "add_to_cart_icon",
+						"std" 		=> "disable",
+						"type" 		=> "images",
+						"options" 	=> array(
+											'disable' 	=> $url . 'disabled.gif',
+											'show' 	=> $url . 'add-cart-icon.gif',
+											'button'  => $url . 'grid4.gif',
+						)
+);
+
+
+$of_options[] = array( 	"name" 		=> "Product short description",
+						"id" 		=> "short_description_in_grid",
+						"desc"      => "Show product short description in grid",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+
+
 
 
 $of_options[] = array( 	"name" 		=> "Category Box style",
@@ -1457,18 +1712,19 @@ $of_options[] = array( 	"name" 		=> "Breadcrumb size",
 
 $of_options[] = array( 	"name" 		=> "Show 'Home' in breadcrumb",
 						"id" 		=> "breadcrumb_home",
-						"desc"      => "Show 'Home' > in breadcrumb",
+						"desc"      => "Show 'Home' in breadcrumb",
 						"std" 		=> 1,
 						"type" 		=> "checkbox"
 );
 
-$of_options[] = array( 	"name" 		=> "Products per row",
+$of_options[] = array( 	"name" 		=> "Products per row - Desktop",
 						"desc" 		=> "Change product per row for category pages.",
 						"id" 		=> "category_row_count",
 						"std" 		=> "3",
 						"type" 		=> "select",
 
 						"options" 	=> array(
+										"1" => "1",
 										"2" => "2",
 										"3" => "3",
 										"4" => "4",
@@ -1477,6 +1733,20 @@ $of_options[] = array( 	"name" 		=> "Products per row",
 
 						)
 );
+
+
+$of_options[] = array( 	"name" 		=> "Products per row - Mobile",
+						"desc" 		=> "Change product per row for category pages.",
+						"id" 		=> "category_row_count_mobile",
+						"std" 		=> "2",
+						"type" 		=> "select",
+
+						"options" 	=> array(
+										"1" => "1",
+										"2" => "2",
+						)
+);
+
 
 
 
@@ -1496,17 +1766,8 @@ $of_options[] = array( 	"name" 		=> "Enable Blog and Pages in Search result",
 						"type" 		=> "checkbox"
 );
 
-$of_options[] = array( 	"name" 		=> "Add to cart icon in grid", 
-						"desc" 		=> "Show add to cart icon in grid",
-						"id" 		=> "add_to_cart_icon",
-						"std" 		=> "disable",
-						"type" 		=> "select",
 
-						"options" 	=> array(
-										"show" => "Show",
-										"disable" => "Disable",
-						)
-);
+
 
 
 $of_options[] = array( 	"name" 		=> "Product image hover style",
@@ -1537,7 +1798,7 @@ $of_options[] = array( 	"name" 		=> "Sale bubble style",
 );
 
 
-$of_options[] = array( 	"name" 		=> "Display % instad of 'Sale!' in Sale bubble (New in 1.9)",
+$of_options[] = array( 	"name" 		=> "Display % instad of 'Sale!' in Sale bubble",
 						"id" 		=> "sale_bubble_percentage",
 						"desc"      => "Show % instad of the sale text. This will override the bubble text.",
 						"std" 		=> 0,
@@ -1547,11 +1808,96 @@ $of_options[] = array( 	"name" 		=> "Display % instad of 'Sale!' in Sale bubble 
 
 $of_options[] = array( 	"name" 		=> "Disable quick view",
 						"id" 		=> "disable_quick_view",
-						"desc"      => "",
+						"desc"      => "Disable quick view in product grid",
 						"std" 		=> 0,
 						"type" 		=> "checkbox"
 );
 
+
+
+$of_options[] = array( 	"name" 		=> "Cart and Checkout",
+						"type" 		=> "heading",
+);
+
+
+$of_options[] = array( 	"name" 		=> "Coupon on Checkout page",
+						"id" 		=> "coupon_checkout",
+						"desc"      => "Enable coupon at checkout page.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Continue Shopping button",
+						"id" 		=> "continue_shopping",
+						"desc"      => "Enable 'Continue Shopping' button on Cart and Thank you page",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+$of_options[] = array( 	"name" 		=> "After cart content",
+						"desc" 		=> "Enter HTML that will show after cart here.",
+						"id" 		=> "html_cart_footer",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+$of_options[] = array( 	"name" 		=> "Thank You page scripts",
+						"desc" 		=> "Enter scripts for the thank you page here",
+						"id" 		=> "html_thank_you",
+						"std" 		=> "",
+						"type" 		=> "textarea"
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Catalog Mode",
+						"type" 		=> "heading",
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Enable catalog mode",
+						"id" 		=> "catalog_mode",
+						"desc"      => "Enable catalog mode. This will disable Add To Cart buttons / Checkout and Shopping cart.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+
+$of_options[] = array( 	"name" 		=> "Disable prices",
+						"id" 		=> "catalog_mode_prices",
+						"desc"      => "Select to disable prices on category pages and product page.",
+						"std" 		=> 0,
+						"type" 		=> "checkbox"
+);
+
+
+$of_options[] = array( 	"name" => "Cart / Account replacement (header)",
+				"id" 		=> "catalog_mode_header",
+				"std" 		=> "",
+				"type" 		=> "textarea",
+				"desc"      => "Enter content you want to display instad of Account / Cart. Shortcodes are allowed. For search box enter <b>[search]</b>. For social icons enter: <b>[follow twitter='http://' facebook='http://' email='post@email.com' pinterest='http://']</b>"
+);
+
+$of_options[] = array( 	"name" => "Add to cart replacement - Product page",
+				"id" 		=> "catalog_mode_product",
+				"std" 		=> "",
+				"type" 		=> "textarea",
+				"desc"      => "Enter contact information or enquery form shortcode here."
+);
+
+$of_options[] = array( 	"name" => "Add to cart replacement - Product Quick View",
+				"id" 		=> "catalog_mode_lightbox",
+				"std" 		=> "",
+				"type" 		=> "textarea",
+				"desc"      => "Enter text that will show in product quick view"
+);
+
+
+} // End if WooCommerce
 
 $of_options[] = array( 	"name" 		=> "Blog",
 						"type" 		=> "heading"
@@ -1577,9 +1923,16 @@ $of_options[] = array( 	"name" 		=> "Blog list style",
 
 
 
-$of_options[] = array( 	"name" 		=> "Blog Header HTML",
+$of_options[] = array( 	"name" 		=> "Blog homepage header",
 						"desc" 		=> "Enter HTML for blog header here. Will be placed above content and sidebar. Shortcodes are allowed. F.ex [block id='blog-header']",
 						"id" 		=> "blog_header",
+						"std" 		=> " ",
+						"type" 		=> "textarea"
+);
+
+$of_options[] = array( 	"name" 		=> "HTML after blog posts",
+						"desc" 		=> "Enter HTML or shortcodes that will be visible after blog posts. (Before comment box). Shortcodes are allowed",
+						"id" 		=> "blog_after_post",
 						"std" 		=> " ",
 						"type" 		=> "textarea"
 );
@@ -1636,6 +1989,17 @@ $of_options[] = array( 	"name" 		=> "Featured Items",
 
 
 $of_options[] = array( 
+				"name"  => "Featured Items Page",
+				"id" 		=> "featured_items_page",
+				"desc" =>  "Set a custom page as parent for the Featured Items. <strong>NB: You might have to save Theme Options two times for the Featured Items permalinks to work properly.</strong>",
+				"std" 		=> 0,
+				"type" 		=> "select",
+				"options" => $of_pages
+);
+
+
+
+$of_options[] = array( 
 				"name"  => "Items per page (Archive and Template pages)",
 				"id" 		=> "featured_items_pr_page",
 				"desc" => "Change items per page.",
@@ -1644,15 +2008,6 @@ $of_options[] = array(
 );
 
 
-/*
-$of_options[] = array( 	"name" 		=> "Featured items page",
-						"desc" 		=> "Select the featured items page here.",
-						"id" 		=> "featured_item_custom_link",
-						"std" 		=> "featured",
-						"type" 		=> "select",
-						"options" => $of_pages
-); */
- 
 
 $of_options[] = array( 	"name" 		=> "Related items",
 						"desc" 		=> "Change  style of related featured items",
@@ -1671,147 +2026,9 @@ $of_options[] = array(
 );
 
 
-$of_options[] = array( 	"name" 		=> "HTML blocks",
-						"type" 		=> "heading"
-);
 
 
-$of_options[] = array( 	"name" 		=> "Custom CSS ",
-						"desc" 		=> "Add custom CSS here",
-						"id" 		=> "html_custom_css",
-						"std" 		=> "div {}",
-						"type" 		=> "textarea"
-);
-
-$of_options[] = array( 	"name" 		=> "Custom CSS (Mobile only)",
-						"desc" 		=> "Add custom CSS here for mobile view",
-						"id" 		=> "html_custom_css_mobile",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "Footer Scripts",
-						"desc" 		=> "Here is the place to paste your Google Analytics code or any other JS code you might want to add to be loaded in the footer of your website.",
-						"id" 		=> "html_scripts_footer",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-$of_options[] = array( 	"name" 		=> "HTML Homepage Intro",
-						"desc" 		=> "Enter HTML that would be placed before header on homepage. Use for Intro images, slides etc.",
-						"id" 		=> "html_intro",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-$of_options[] = array( 	"name" 		=> "HTML Shop header",
-						"desc" 		=> "Enter HTML that should be placed on top of main Shop page.",
-						"id" 		=> "html_shop_page",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "HTML after header (Global)",
-						"desc" 		=> "Enter HTML that should be placed after header here. Shortcodes are allowed.",
-						"id" 		=> "html_after_header",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "HTML before footer (Global)",
-						"desc" 		=> "Enter HTML for footer here. Shortcodes are allowed. F.ex [block id='payments']",
-						"id" 		=> "html_before_footer",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "HTML after footer (Global)",
-						"desc" 		=> "Enter HTML for footer here. Shortcodes are allowed. F.ex [block id='payments']",
-						"id" 		=> "html_after_footer",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-$of_options[] = array( 	"name" 		=> "HTML before Add To Cart (Product Page)",
-						"desc" 		=> "Enter HTML and shortcodes that will show before Add to cart selections.",
-						"id" 		=> "html_before_add_to_cart",
-						"std" 		=> " ",
-						"type" 		=> "textarea"
-);
-
-
-$of_options[] = array( 	"name" 		=> "HTML after Add To Cart (Product Page)",
-						"desc" 		=> "Enter HTML and shortcodes that will show after Add to cart button.",
-						"id" 		=> "html_after_add_to_cart",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "HTML after cart",
-						"desc" 		=> "Enter HTML that will show after cart here.",
-						"id" 		=> "html_cart_footer",
-						"std" 		=> "",
-						"type" 		=> "textarea"
-);
-
-$of_options[] = array( 	"name" 		=> "Catalog Mode",
-						"type" 		=> "heading",
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "Enable catalog mode",
-						"id" 		=> "catalog_mode",
-						"desc"      => "Enable catalog mode. This will disable Add To Cart buttons / Checkout and Shopping cart.",
-						"std" 		=> 0,
-						"type" 		=> "checkbox"
-);
-
-
-
-$of_options[] = array( 	"name" 		=> "Disable prices",
-						"id" 		=> "catalog_mode_prices",
-						"desc"      => "Select to disable prices on category pages and product page.",
-						"std" 		=> 0,
-						"type" 		=> "checkbox"
-);
-
-
-$of_options[] = array( 	"name" => "Cart / Account replacement (header)",
-				"id" 		=> "catalog_mode_header",
-				"std" 		=> "",
-				"type" 		=> "textarea",
-				"desc"      => "Enter content you want to display instad of Account / Cart. Shortcodes are allowed. For search box enter <b>[search]</b>. For social icons enter: <b>[follow twitter='http://' facebook='http://' email='post@email.com' pinterest='http://']</b>"
-);
-
-$of_options[] = array( 	"name" => "Add to cart replacement - Product page",
-				"id" 		=> "catalog_mode_product",
-				"std" 		=> "",
-				"type" 		=> "textarea",
-				"desc"      => "Enter contact information or enquery form shortcode here."
-);
-
-$of_options[] = array( 	"name" => "Add to cart replacement - Product Quick View",
-				"id" 		=> "catalog_mode_lightbox",
-				"std" 		=> "",
-				"type" 		=> "textarea",
-				"desc"      => "Enter text that will show in product quick view"
-);
-
-
-$of_options[] = array( 	"name" 		=> "Account and Social",
+$of_options[] = array( 	"name" 		=> "Social and Sharing",
 						"type" 		=> "heading",
 );
 
@@ -1853,33 +2070,16 @@ $of_options[] = array( 	"name" 		=> "Share icons",
 						"options" 	=> array("facebook" => "Facebook","twitter" => "Twitter","email" => "Email","pinterest" => "Pinterest","googleplus" => "Google Plus","vk" => "VKontakte")
 );
 
-$of_options[] = array( 	"name" 		=> "Enable Coupon on Checkout page",
-						"id" 		=> "coupon_checkout",
-						"desc"      => "Enable coupon at checkout page.",
-						"std" 		=> 0,
-						"type" 		=> "checkbox"
+
+$of_options[] = array( 	"name" 		=> "Custom share icons",
+						"desc" 		=> "Replace share icons with custom share script or HTML. Leave empty to use default share icons.",
+						"id" 		=> "custom_share_icons",
+						"std" 		=> "",
+						"type" 		=> "textarea"
 );
 
 
-$of_options[] = array( 	"name" 		=> "Global settings",
-						"type" 		=> "heading",
-);
 
-
-$of_options[] = array( 	"name" 		=> "Enable minified CSS and JS",
-						"id" 		=> "minified_flatsome",
-						"desc"      => "Speed up your site by enable the minified CSS and Javscript of flatsome. <strong>NB!</strong> style.css will not be loaded. Custom styles needs to be placed in Theme Option > HTML Blocks > Custom CSS.",
-						"std" 		=> 0,
-						"type" 		=> "checkbox"
-);
-
-
-$of_options[] = array( 	"name" 		=> "Flatsome Builder Beta",
-						"id" 		=> "flatsome_builder",
-						"desc"      => "Enable Flatsome Builder Beta.",
-						"std" 		=> 1,
-						"type" 		=> "checkbox"
-);
 				
 // Backup Options
 $of_options[] = array( 	"name" 		=> "Backup and Import",

@@ -99,13 +99,6 @@
     </div><!-- large-9 -->
     </div><!-- row -->
  
-         
-    
-<?php
-	//Get the Thumbnail URL for pintrest
-	$src = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), false, '' );
-?>
-
 
 
 </div><!-- #product-<?php the_ID(); ?> -->

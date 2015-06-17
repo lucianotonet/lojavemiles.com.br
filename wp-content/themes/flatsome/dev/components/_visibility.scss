@@ -14,7 +14,12 @@ $include-html-visibility-classes: $include-html-classes !default;
   .show-for-medium-up,
   .show-for-large,
   .show-for-large-up,
-  .show-for-xlarge { display: none !important; }
+  .show-for-xlarge,
+  li.show-for-medium,
+  li.show-for-medium-up,
+  li.show-for-large,
+  li.show-for-large-up,
+  li.show-for-xlarge { display: none !important; }
 
   .hide-for-medium,
   .hide-for-medium-up,
@@ -24,13 +29,16 @@ $include-html-visibility-classes: $include-html-classes !default;
 
   .hide-for-small,
   .hide-for-medium-down,
-  .hide-for-large-down { display: none !important; }
+  .hide-for-large-down,
+  li.hide-for-small,
+  li.hide-for-medium-down,
+  li.hide-for-large-down  { display: none !important; }
 
   /* Specific visilbity for tables */
   
 
   /* Medium Displays: 768px - 1279px */
-  @media #{$small} {
+ @media only screen and (min-width:$small-screen){
     .show-for-medium,
     .show-for-medium-up { display: inherit !important; }
 
@@ -46,7 +54,7 @@ $include-html-visibility-classes: $include-html-classes !default;
   }
 
   /* Large Displays: 1280px - 1440px */
-  @media #{$medium} {
+  @media only screen and (min-width:$medium-screen){
     .show-for-large,
     .show-for-large-up { display: inherit !important; }
 
@@ -64,7 +72,7 @@ $include-html-visibility-classes: $include-html-classes !default;
   }
 
   /* X-Large Displays: 1400px and up */
-  @media #{$large} {
+ @media only screen and (min-width:$large-screen){
     .show-for-xlarge { display: inherit !important; }
 
     .show-for-large,
@@ -89,7 +97,7 @@ $include-html-visibility-classes: $include-html-classes !default;
   /* Specific visilbity for tables */
   
 
-  @media #{$landscape} {
+ @media only screen and (orientation: landscape){
     .show-for-landscape,
     .hide-for-portrait { display: inherit !important; }
     .hide-for-landscape,
@@ -99,7 +107,7 @@ $include-html-visibility-classes: $include-html-classes !default;
     
   }
 
-  @media #{$portrait} {
+  @media only screen and (orientation: portrait){
     .show-for-portrait,
     .hide-for-landscape { display: inherit !important; }
     .hide-for-portrait,

@@ -1,6 +1,6 @@
 <?php
 /*
-Template name: Full Width (100%) - Transparent header
+Template name: Full Width - Transparent header
 */
 get_header(); ?>
 

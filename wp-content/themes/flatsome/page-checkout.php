@@ -3,7 +3,9 @@
 Template name: Page Checkout
 Use this for Cart, Checkout and thank you page.
 */
-get_header(); ?>
+get_header();
+global $flatsome_opt;
+ ?>
 
 <div  class="page-wrapper page-checkout">
 <div class="row">
@@ -20,6 +22,7 @@ get_header(); ?>
 			<span class="icon-angle-right divider"></span>  
 			<span class="title-thankyou"><?php _e('Order Complete', 'flatsome'); ?></span>
 		</h1>
+
 	</div>
 	<?php } ?>
 	<?php } else { ?> 
@@ -40,10 +43,16 @@ get_header(); ?>
 
 
 
+
+
 </div><!-- end #content large-12 -->
 </div><!-- end row -->
 </div><!-- end page-right-sidebar container -->
 
-
+<?php if (is_wc_endpoint_url('order-received')){ ?>
+	<!-- Thank you page scripts -->
+	<?php if(isset($flatsome_opt['html_thank_you'])) echo $flatsome_opt['html_thank_you']; ?>
+	
+<?php } ?>
 
 <?php get_footer(); ?>

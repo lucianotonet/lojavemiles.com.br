@@ -2,51 +2,33 @@
 // [blog_posts]
 function shortcode_latest_from_blog($atts, $content = null) {
 	global $flatsome_opt;
-	$sliderrandomid = rand();
+	$element_id = rand();
 	extract(shortcode_atts(array(
 		"posts" => '8',
 		"columns" => '4',
 		"category" => '',
 		"style" => 'text-normal',
+		"type" => "slider", // Slider / Grid / Masonry
 		"image_height" => 'auto',
 		"show_date" => 'true',
 		"excerpt" => 'true',
 	), $atts));
+
+	if($type == 'masonry'){
+		$style = 'text-boxed';
+		$image_height = 'auto';
+	}
+
 	ob_start();
 	?>
-    <script>
-	jQuery(document).ready(function($) {
-		$(window).load(function() {
-			/* items_slider */
-			$('#slider_<?php echo $sliderrandomid ?>').iosSlider({
-				snapToChildren: true,
-				desktopClickDrag: true,
-				infiniteSlider: true,
-				navPrevSelector: '.prev_<?php echo $sliderrandomid ?>',
-				navNextSelector: '.next_<?php echo $sliderrandomid ?>',
-				onSliderLoaded: slideLoad,
-				onSliderResize: slideLoad
-			});
-			function slideLoad(args){
-		     	setTimeout(function(){
-		     		var t=0;
-					 var t_elem;
-					 $(args.sliderContainerObject).find('li').each(function () {
-					    $this = $(this);
-					    if ( $this.outerHeight() > t ) {
-					        t_elem=this;
-					        t=$this.outerHeight();
-		    			}
-					  });
-			         $(args.sliderContainerObject).css('min-height',t);
-		   		  },10);
-		    }
-		});
-	});
-	</script>
-    	<div class="row column-slider">
-            <div id="slider_<?php echo $sliderrandomid ?>" class="iosSlider blog-posts <?php if($style  == 'text-overlay') { ?>slider-center-arrows<?php } ?>" style="min-height:<?php echo $image_height; ?>;height:<?php echo $image_height; ?>;">
-                <ul class="slider large-block-grid-<?php echo $columns ?> small-block-grid-2">
+      	<div id="id-<?php echo $element_id; ?>" class="row column-<?php echo $type; ?> blog-posts">
+            <?php if($type == 'slider'){ ?>
+            	<div id="slider_<?php echo $element_id ?>" class="iosSlider <?php if($style  == 'text-overlay') { ?>slider-center-arrows<?php } ?>" style="min-height:<?php echo $image_height; ?>;height:<?php echo $image_height; ?>;">
+            <?php } else { 
+            	echo '<div class="large-12 columns"> ';
+            } 
+            ?>
+                <ul class="<?php echo $type; ?> large-block-grid-<?php echo $columns ?> small-block-grid-2">
 
 					<?php
                     $args = array(
@@ -104,17 +86,66 @@ function shortcode_latest_from_blog($atts, $content = null) {
 					wp_reset_query();
 
                     ?>
-                </ul>   <!-- .slider -->
+         </ul>
 
-				<div class="sliderControlls dark">
-			        <div class="sliderNav small hide-for-small">
-			        <a href="javascript:void(0)" class="nextSlide prev_<?php echo $sliderrandomid ?>"><span class="icon-angle-left"></span></a>
-			        <a href="javascript:void(0)" class="prevSlide next_<?php echo $sliderrandomid ?>"><span class="icon-angle-right"></span></a>
-			        </div>
-       		    </div><!-- .sliderControlls -->
-        </div> <!-- .iOsslider -->
-    </div><!-- .row .column-slider -->
+		<?php if($type == 'slider'){ ?>
+		   <div class="sliderControlls dark">
+		        <div class="sliderNav small hide-for-small">
+		  		      <a href="javascript:void(0)" class="nextSlide prev_<?php echo $element_id ?>"><span class="icon-angle-left"></span></a>
+		   		     <a href="javascript:void(0)" class="prevSlide next_<?php echo $element_id?>"><span class="icon-angle-right"></span></a>
+		        </div>
+		   	</div><!-- .sliderControlls -->
+		
+			<script>
+			jQuery(document).ready(function($) {
+				$(window).load(function() {
+					/* items_slider */
+					$('#slider_<?php echo $element_id ?>').iosSlider({
+						snapToChildren: true,
+						desktopClickDrag: true,
+						infiniteSlider: true,
+						navPrevSelector: '.prev_<?php echo $element_id ?>',
+						navNextSelector: '.next_<?php echo $element_id ?>',
+						onSliderLoaded: slideLoad,
+						onSliderResize: slideLoad
+					});
+					function slideLoad(args){
+				     	setTimeout(function(){
+				     		var t=0;
+							 var t_elem;
+							 $(args.sliderContainerObject).find('li').each(function () {
+							    $this = $(this);
+							    if ( $this.outerHeight() > t ) {
+							        t_elem=this;
+							        t=$this.outerHeight();
+				    			}
+							  });
+					         $(args.sliderContainerObject).css('min-height',t);
+				   		  },10);
+				    }
+				});
+			});
+			</script>
+		<?php } ?>
 
+		<?php if($type == 'masonry'){ ?>
+			<script>
+			jQuery(document).ready(function ($) {
+			    imagesLoaded( document.querySelector('#id-<?php echo $element_id; ?>'), function( instance, container ) {
+			    	var $container = $("#id-<?php echo $element_id; ?> ul.masonry");
+				    // initialize
+				    $container.packery({
+				      itemSelector: ".ux-box",
+				      gutter: 0,
+				    });
+					$container.packery('layout');
+				});
+			 });
+			</script>
+		<?php } ?>
+
+        </div> <!-- .iOsslider / .large-12 -->
+    </div><!-- .row  -->
 
 	<?php
 	$content = ob_get_contents();

@@ -181,19 +181,19 @@ class Options_Machine {
 						$theValue = $option;
 						if (!is_numeric($select_ID))
 							$theValue = $select_ID;
-						$output .= '<option id="' . $select_ID . '" value="'.$theValue.'" ' . selected($smof_data[$value['id']], $theValue, false) . ' />'.$option.'</option>';	 
+						$output .= '<option id="' . $select_ID . '" value="'.$select_ID.'" ' . selected($smof_data[$value['id']], $select_ID, false) . ' />'.$option.'</option>';	 
 					 } 
 					$output .= '</select></div>';
 				break;
 
 
 				case 'presets':
-					$output .= '<a href="#" class="button-primary">Load presets</a>';
+					$output .= '<a href="#" class="button-primary">Select presets</a>';
 					$output .= '<div class="pre_select_wrapper">';
 					foreach ($value['options'] as $select_ID => $option) {
 						$output .= '<a href="#" data-preset="'.$option.'"><img class="pre-select-img" style="width:100%;" src="'.$select_ID.'"/></a>';
 					 } 
-					$output .= '<a href="#" class="button reset-button cancel">Cancel</a></div>';
+					$output .= '</div>';
 				break;
 				
 				//textarea option
@@ -565,7 +565,7 @@ class Options_Machine {
 					
 					$output .= '<div class="backup-box">';
 					$output .= '<div class="instructions">'.$instructions."\n";
-					$output .= '<p><strong>'. __('Last Backup : ').'<span class="backup-log">'.$log.'</span></strong></p></div>'."\n";
+					$output .= '<p><strong>'. __('Last Backup : ', 'ux-admin').'<span class="backup-log">'.$log.'</span></strong></p></div>'."\n";
 					$output .= '<a href="#" id="of_backup_button" class="button" title="Backup Options">Backup Options</a>';
 					$output .= '<a href="#" id="of_restore_button" class="button" title="Restore Options">Restore Options</a>';
 					$output .= '</div>';

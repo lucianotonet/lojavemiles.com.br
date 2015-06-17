@@ -39,6 +39,17 @@ if(function_exists('get_term_meta')){
 </div>
 
 
+<?php if($flatsome_opt['masonry_grid']) { ?>
+<style> 
+	/* Masonery Grid style */
+	.products li:nth-child(even) .front-image{ margin-top: -30px;}
+	.products li:nth-child(4) .front-image, 
+	.products li:nth-child(8) .front-image, 
+	.products li:nth-child(12) .front-image{ margin-top: -50px;}
+</style>
+<?php  } ?>
+
+
 <div class="row category-page">
 
 <?php
@@ -70,6 +81,21 @@ if(function_exists('get_term_meta')){
     	<?php do_action( 'ux_woocommerce_navigate_products'); ?>    	
     </div><!-- .right -->
 </div><!-- .breadcrumb-row -->
+
+
+<?php if($flatsome_opt['category_sidebar'] == 'off-canvas') { ?>
+	<div class="category-filtering mob-center">
+		<a href="#shop-sidebar" class="off-canvas-overlay filter-button" data-pos="left" data-color="light"><span class="icon-menu"></span> <?php echo __( 'Filter', 'woocommerce' ); ?></a>
+		<?php the_widget('WC_Widget_Layered_Nav_Filters'); ?>
+	</div><!-- Category filtering -->
+<?php } else if($flatsome_opt['category_sidebar'] !== 'none') { ?>
+	<div class="category-filtering mob-center show-for-small">
+		<a href="#shop-sidebar" class="off-canvas-overlay filter-button" data-pos="left" data-color="light"><span class="icon-menu"></span> <?php echo __( 'Filter', 'woocommerce' ); ?></a>
+		<?php the_widget('WC_Widget_Layered_Nav_Filters'); ?>
+	</div><!-- Category filtering -->
+<?php } ?>
+
+
 </div><!-- .large-12 breadcrumb -->
 
 
@@ -134,7 +160,7 @@ if(function_exists('get_term_meta')){
       while ( have_posts() ) : the_post();
         $wc_page = false;
         if($post->post_type == 'page'){
-          foreach (array('myaccount', 'edit_address', 'change_password', 'lost_password', 'shop', 'cart', 'checkout', 'pay', 'view_order', 'thanks', 'terms') as $wc_page_type) {
+          foreach (array('shop', 'cart', 'checkout', 'view_order', 'terms') as $wc_page_type) {
             if( $post->ID == woocommerce_get_page_id($wc_page_type) ) $wc_page = true;
           }
         }
@@ -151,20 +177,28 @@ if(function_exists('get_term_meta')){
                       
  </div><!-- .large-12 -->
 
+<?php 
+$no_widgets_msg = '<p style="padding:30% 10%">You need to assign Widgets to <strong>"Shop Sidebar"</strong> in <a href="'.get_site_url().'/wp-admin/widgets.php">Apperance > Widgets</a> to show anything here</p>'; ?>
 <?php if($flatsome_opt['category_sidebar'] == 'right-sidebar') { ?>
 <!-- Right Shop sidebar -->
-        <div class="large-3 right columns">
+        <div id="shop-sidebar" class="large-3 hide-for-small  right columns">
         	<div class="sidebar-inner">
-            	<?php dynamic_sidebar('shop-sidebar'); ?>
+            	<?php if(is_active_sidebar('shop-sidebar')) { dynamic_sidebar('shop-sidebar'); } else{ echo $no_widgets_msg; } ?>
        		</div>
         </div>            
 <?php } else if ($flatsome_opt['category_sidebar'] == 'left-sidebar') { ?>
 <!-- Left Shop sidebar -->
-		<div class="large-3 left columns">
-			<div class="sidebar-inner">
-           		<?php dynamic_sidebar('shop-sidebar'); ?>
+		<div class="large-3 hide-for-small left columns">
+			<div id="shop-sidebar" class="sidebar-inner">
+           		<?php if(is_active_sidebar('shop-sidebar')) { dynamic_sidebar('shop-sidebar'); } else{ echo $no_widgets_msg; } ?>
             </div>
         </div>
+<?php } else if ($flatsome_opt['category_sidebar'] == 'off-canvas') { ?>
+		<div id="shop-sidebar" class="mfp-hide">
+			<div class="sidebar-inner">
+	       		<?php if(is_active_sidebar('shop-sidebar')) { dynamic_sidebar('shop-sidebar'); } else{ echo $no_widgets_msg; } ?>
+	        </div>
+	    </div>
 <?php } ?>
 
 
@@ -188,5 +222,25 @@ if(function_exists('get_term_meta')){
 	}
 }
 ?>
+
+
+<?php if($flatsome_opt['masonry_grid']) { 
+// Script for creating pinterest grid
+?>
+<script>
+jQuery(document).ready(function ($) {
+    imagesLoaded( document.querySelector('.products'), function( instance, container ) {
+    	var $container = $(".products");
+	    // initialize
+	    $container.packery({
+	      itemSelector: ".product-small",
+	      gutter: 0,
+	    });
+		$container.packery('layout');
+	});
+ });
+</script>
+<?php } ?> 
+
 
 <?php get_footer('shop'); ?>

@@ -3,14 +3,14 @@
 if(isset($flatsome_opt['type_headings']) && !$flatsome_opt['disable_fonts']){
 $customfont = '';
 $default = array(
-					'arial',
-					'verdana',
-					'trebuchet',
-					'georgia',
-					'times',
-					'tahoma',
-					'helvetica'
-				);
+		'arial',
+		'verdana',
+		'trebuchet',
+		'georgia',
+		'times',
+		'tahoma',
+		'helvetica'
+	);
 
 $googlefonts = array(
 					$flatsome_opt['type_headings'],
@@ -40,7 +40,7 @@ $customfontset = '&subset='.substr_replace($customfontset ,"",-1);
 			
 foreach($googlefonts as $googlefont) {
 	if(!in_array($googlefont, $default)) {
-			$customfont = str_replace(' ', '+', $googlefont). ':300,300italic,400,400italic,700,700italic,900,900italic|' . $customfont;
+			$customfont = str_replace(' ', '+', $googlefont). ':300,400,700,900|' . $customfont;
 	}
 }	
 
@@ -48,10 +48,9 @@ foreach($googlefonts as $googlefont) {
 if ($customfont != "") {	
 	function google_fonts() {	
 		global $customfont, $customfontset;		
-		$protocol = is_ssl() ? 'https' : 'http';
-			wp_enqueue_style( 'flatsome-googlefonts', "$protocol://fonts.googleapis.com/css?family=". substr_replace($customfont ,"",-1) . $customfontset);}
-			add_action( 'wp_enqueue_scripts', 'google_fonts' );
-	
+		wp_enqueue_style( 'flatsome-googlefonts', "//fonts.googleapis.com/css?family=". substr_replace($customfont ,"",-1) . $customfontset);
+	}
+	add_action( 'wp_enqueue_scripts', 'google_fonts' );
 }
 
 }

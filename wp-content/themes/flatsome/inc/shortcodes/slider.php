@@ -13,50 +13,58 @@ function shortcode_ux_slider($atts, $content=null) {
         'infinitive' => 'true',
         'columns' => '',
         'height' => '',
-        'top_padding' => ''
+        'top_padding' => '',
+        'mobile' => '',
     ), $atts ) );
+    ?>
 
-    ?> 
 <div class="ux_slider_wrapper">
-<div id="slider_<?php echo $sliderrandomid ?>" class="iosSlider default" style="<?php if($height) echo 'min-height:'.$height.'; height:'.$height; ?>">
-        <div class="slider <?php if($columns) echo 'columns-'.$columns; ?>">
+<div id="slider_<?php echo $sliderrandomid ?>" class="iosSlider default <?php if($mobile == "false") echo 'slider-hide-for-small'; ?>" style="<?php if($height) echo 'min-height:'.$height.'; height:'.$height; ?>">
+         <div class="slider <?php if($columns) echo 'columns-'.$columns; ?> <?php if($mobile == "false") echo 'hide-for-small'; ?>">
             <?php echo fixShortcode($content); ?>
          </div>
-        <div class="sliderControlls <?php echo $nav_color; ?> <?php if($hide_nav == 'false') echo 'dont_hide_nav'; ?>">
+        <div class="sliderControlls <?php if(!$mobile) echo 'hide-for-small'; ?> <?php echo $nav_color; ?> <?php if($hide_nav == 'false') echo 'dont_hide_nav'; ?>">
             <?php if($arrows == 'true'){ ?> 
-            <div class="sliderNav hide-for-small">
-            <a href="javascript:void(0)" class="nextSlide next_<?php echo $sliderrandomid; ?>"><span class="icon-angle-left"></span></a>
-            <a href="javascript:void(0)" class="prevSlide prev_<?php echo $sliderrandomid; ?>"><span class="icon-angle-right"></span></a>
-            </div>
+              <div class="sliderNav hide-for-small">
+                 <a href="javascript:void(0)" class="nextSlide next_<?php echo $sliderrandomid; ?>"><span class="icon-angle-left"></span></a>
+                 <a href="javascript:void(0)" class="prevSlide prev_<?php echo $sliderrandomid; ?>"><span class="icon-angle-right"></span></a>
+              </div>
             <?php } ?>
             <div class="sliderBullets"></div>
         </div><!-- .sliderControlls -->
-        <div class="loading dark"><i></i><i></i><i></i><i></i></div>
+        <div class="ux-loading dark"><i></i><i></i><i></i><i></i></div>
 </div><!-- #slider -->
-
 <script type="text/javascript">
-    (function($){
-    $(window).load(function(){
+     jQuery(document).ready(function($) { 
 
-    /* install slider */
-    $('#slider_<?php echo $sliderrandomid; ?>').iosSlider({
-        snapToChildren: true,
-        desktopClickDrag: true,
-        snapFrictionCoefficient: 0.8,
-        autoSlideTransTimer: 500,
-        horizontalSlideLockThreshold:3,
-        slideStartVelocityThreshold:3,
-        infiniteSlider:<?php echo $infinitive; ?>,
-        autoSlide: <?php echo $auto_slide; ?>,
-        autoSlideTimer: <?php echo $timer; ?>,
-        navPrevSelector: $('.next_<?php echo $sliderrandomid; ?>'),
-        navNextSelector: $('.prev_<?php echo $sliderrandomid; ?>'),
-        onSliderLoaded: startSlider,
-        onSlideChange: slideChange,
-        onSliderResize: slideResize,
-    });
+      // Remove breakes
+      $('.slider > br').remove();
+
+      // Remove empty sliders
+      if ($('.slider > p').is(':empty')) {
+          $('.slider > p').remove();
+      } 
+      
+      /* install slider */
+      $('#slider_<?php echo $sliderrandomid; ?>').iosSlider({
+          snapToChildren: true,
+          desktopClickDrag: true,
+          snapFrictionCoefficient: 0.8,
+          autoSlideTransTimer: 500,
+          horizontalSlideLockThreshold:3,
+          slideStartVelocityThreshold:3,
+          infiniteSlider:<?php echo $infinitive; ?>,
+          autoSlide: <?php echo $auto_slide; ?>,
+          autoSlideTimer: <?php echo $timer; ?>,
+          navPrevSelector: $('.next_<?php echo $sliderrandomid; ?>'),
+          navNextSelector: $('.prev_<?php echo $sliderrandomid; ?>'),
+          onSliderLoaded: startSlider,
+          onSlideChange: slideChange,
+          onSliderResize: slideResize,
+      }); 
 
       function slideChange(args) {
+
         $(args.sliderContainerObject).find('.inner-wrap').each(function(){
           $(this).removeClass($(this).attr('data-animate'));
         });
@@ -82,7 +90,9 @@ function shortcode_ux_slider($atts, $content=null) {
        /* update bullets */
        $(args.sliderContainerObject).find('.sliderBullets .bullet').removeClass('active');
        $(args.sliderContainerObject).find('.sliderBullets .bullet:eq(' + (args.currentSlideNumber - 1) + ')').addClass('active');
-       
+    
+
+
       }
      function slideResize(args) {
         /* set height of first slide */
@@ -96,9 +106,8 @@ function shortcode_ux_slider($atts, $content=null) {
 
      function startSlider(args){ 
         /* remove spinner when slider is loaded */
-        $(args.sliderContainerObject).find('.loading').fadeOut();
+        $(args.sliderContainerObject).find('.ux-loading').fadeOut();
 
-      
 
         /* add current class to first slide */
         $(args.currentSlideObject).addClass('current');
@@ -139,8 +148,7 @@ function shortcode_ux_slider($atts, $content=null) {
          });
          <?php } ?>
      }
-    })
-    })(jQuery);
+    });
     </script>
     <?php if($top_padding) { ?><style>#slider_<?php echo $sliderrandomid; ?> .ux-section-content > .row, #slider_<?php echo $sliderrandomid; ?> .ux_banner .row{margin-top: <?php echo $top_padding; ?>}</style><?php } ?>
 </div><!-- .ux_slider_wrapper -->

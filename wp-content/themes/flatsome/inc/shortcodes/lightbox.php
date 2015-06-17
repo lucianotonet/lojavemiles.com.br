@@ -7,29 +7,57 @@ function uxLightboxShortcode($atts, $content=null) {
         'id' => 'enter-id-here',
         'width' => '600px',
         'padding' => '20px',
-        'button' => '',
-        'button_text' => '',
+        'auto_open' => false,
+        'auto_timer' => '2500',
+        'auto_show' => 'always'
     ), $atts ) );
     ?> 
 
-<div id="<?php echo $id; ?>" class="mfp-hide my-mfp-zoom-in lightbox-white" style="max-width:<?php echo $width ?>;padding:<?php echo $padding; ?>">
+<div id="<?php echo $id; ?>" class="mfp-hide mfp-content-inner lightbox-white" style="max-width:<?php echo $width ?>;padding:<?php echo $padding; ?>">
     <?php echo fixShortcode($content); ?>
 </div><!-- Lightbox-<?php echo $id; ?> -->
 
 <script>
 jQuery(document).ready(function($) {
-   $('a[href="#<?php echo $id; ?>"]').addClass('open-popup-link-<?php echo $id; ?>');
-   
-    $('.open-popup-link-<?php echo $id; ?>').magnificPopup({
-       type:'inline',
-       midClick: true,
-       mainClass: 'my-mfp-zoom-in product-zoom-lightbox',
-       removalDelay: 300
-    });
 
-    $('.open-popup-link-<?php echo $id; ?>').click(function(e){
-      e.preventDefault();
-    });
+      <?php if($auto_open) { ?>
+        // auto open lightbox
+         <?php if($auto_show == 'always') { ?>$.removeCookie("lightbox_<?php echo $id; ?>");<?php } ?>
+        // run lightbox if no cookie is set
+         if($.cookie("lightbox_<?php echo $id; ?>") !== 'opened'){
+              // Open lightbox
+              setTimeout(function(){ 
+                  $.magnificPopup.open({midClick: true, removalDelay: 300, items: { src: '#<?php echo $id; ?>', type: 'inline'}});
+              }, <?php echo $auto_timer; ?>);
+
+              // set cookie
+              $.cookie("lightbox_<?php echo $id; ?>", "opened");
+          }
+      <?php } ?>
+
+      $('a[href="#<?php echo $id; ?>"]').click(function(e){
+         // Close openend lightboxes
+         var delay = 0;
+         
+         if($.magnificPopup.open){
+            $.magnificPopup.close();
+            delay = 300;
+         }
+
+         // Start lightbox
+         setTimeout(function(){
+            $.magnificPopup.open({
+                  midClick: true,
+                  removalDelay: 300,
+                  items: {
+                    src: '#<?php echo $id; ?>', 
+                    type: 'inline'
+                  }
+            });
+          }, delay);
+
+        e.preventDefault();
+      });
 });
 </script>
 <?php

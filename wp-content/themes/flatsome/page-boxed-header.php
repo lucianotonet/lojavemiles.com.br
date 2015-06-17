@@ -1,6 +1,6 @@
 <?php
 /*
-Template name: Full Width (100%) - Boxed header
+Template name: Full Width - Boxed header
 */
 get_header(); ?>
 

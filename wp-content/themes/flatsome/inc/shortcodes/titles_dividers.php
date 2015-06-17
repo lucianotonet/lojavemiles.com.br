@@ -5,13 +5,14 @@ function title_shortcode( $atts, $content = null ){
     'text' => '',
     'style' => '',
     'link' => '',
-    'link_text' => ''
+    'link_text' => '',
+    'target' => ''
   ), $atts ) );
 
   $link_output = '';
   $style_output ='';
   if($style) $style_output = 'title_'.$style;
-  if($link) $link_output = '<a href="'.$link.'">'.$link_text.'</a>';
+  if($link) $link_output = '<a href="'.$link.'" target="'.$target.'">'.$link_text.'</a>';
   $after_title = '';
   $align = '';
   if($style == 'divided'){ $after_title = '<div class="tx-div medium"></div>'; $align = 'text-center'; };

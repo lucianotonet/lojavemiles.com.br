@@ -4,21 +4,6 @@ Template name: My Account Sidebar
 This templates add My account to the sidebar. 
 */
 
-global $post, $yith_wcwl;
-
-$current_url = get_permalink();
-$wishlist_url = '';
-
-if (in_array( 'yith-woocommerce-wishlist/init.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) { 
-$wishlist_url = $yith_wcwl->get_wishlist_url();
-}
-
-$myaccount_page_id = get_option( 'woocommerce_myaccount_page_id' );
-$myaccount_page = get_permalink( $myaccount_page_id );
-
-if (!is_user_logged_in() && $current_url != $myaccount_page && $wishlist_url != $current_url) {
-  header( "Location: $myaccount_page" );
-}
 
 get_header(); 
 ?>
@@ -51,7 +36,7 @@ get_header();
 <div class="row collapse vertical-tabs">
 <div class="large-3 columns">
 	<?php if(is_user_logged_in()){?>
-		<div class="account-user hide-for-small">
+		<div class="account-user">
 		<?php 
 			 	$current_user = wp_get_current_user();
 			 	$user_id = $current_user->ID;
@@ -59,7 +44,7 @@ get_header();
 	    ?>
 
 	    <span class="user-name"><?php echo $current_user->display_name?> <em><?php echo '#'.$user_id;?></em></span>
-	   	<span class="logout-link"><a href="<?php echo wp_logout_url(); ?>"><?php _e('Logout','woocommerce'); ?></a></span>		 
+	   	<span class="logout-link"><a href="<?php echo wp_logout_url(); ?>"><?php _e('Log Out','woocommerce'); ?></a></span>		 
 
 	    <br>
 	</div>

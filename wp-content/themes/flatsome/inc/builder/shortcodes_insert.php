@@ -2,16 +2,18 @@
 
 
 $builder_url = get_template_directory_uri().'/inc/builder/';
-
+$temp_image = get_template_directory_uri().'/css/temp.jpg';
 
 $default_elements ='
       <li><a href="#" class="ux-add-div" data-shortcode="ux_slider">Slider<textarea>[ux_slider] [/ux_slider]</textarea></a></li>
       <li><a href="#" class="ux-add-div has-lightbox" data-shortcode="ux_banner">Banner</a></li>
       <li><a href="#" class="ux-add-div has-lightbox" data-shortcode="elements">Element</a></li>
       <li><a href="#" class="ux-add-div" data-shortcode="text">Text <textarea><h3>Lorem ipsum ipsum</h3>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.re</textarea></a></li>
+      <li><a href="#" class="ux-add-div" data-shortcode="image">Image <textarea>[ux_image]</textarea></a></li>
       <li><a href="#" class="ux-add-div has-lightbox" data-shortcode="products">Shop</a></li>
       <li><a href="#" class="ux-add-div" data-shortcode="block">Block <textarea>[block]</textarea></a></li>
       <li><a href="#" class="ux-add-div" data-shortcode="gap">Gap <textarea>[gap height="30px"]</textarea></a></li>
+      <li><a href="#" class="ux-add-div has-lightbox" data-shortcode="code">Code</a></li>
 
       ';
 
@@ -39,14 +41,13 @@ $default_elements ='
 </ul>
 </div><!-- columns in row -->
 
+<!-- Insert code -->
+<div class="ux-add-section" data-add-section="code">
+  <ul class="ux-add-list">
+        <li><a href="#" class="ux-add-div">1 / 1<textarea>[col span="1/1"] [/col]</textarea></a></li>
+  </ul>
+</div><!-- columns in row -->
 
-
-<div class="ux-add-section" data-add-section="section">
-<ul class="ux-add-list">
-      <li><a href="#" class="ux-add-div has-lightbox" data-shortcode="row">Row / Columns</a></li>
-      <?php echo $default_elements; ?>
-</ul>
-</div><!-- Add section root -->
 
 
 <div class="ux-add-section" data-add-section="ux_slider">
@@ -142,13 +143,28 @@ $default_elements ='
             <li><a href="#" class="ux-add-div" data-shortcode="row"><img src="<?php echo $builder_url.'img/shortcodes/col_1_3.jpg'; ?>"/><span>1/3 | 1/3 | 1/3 </span><textarea>[row] [col span="1/3"]  [/col] [col span="1/3"]  [/col][col span="1/3"]  [/col] [/row]</textarea></a></li>
             <li><a href="#" class="ux-add-div" data-shortcode="row"><img src="<?php echo $builder_url.'img/shortcodes/col_1_4.jpg'; ?>"/><span>1/4 | 1/4 | 1/4 | 1/4</span><textarea>[row] [col span="1/4"]  [/col] [col span="1/4"]  [/col][col span="1/4"]  [/col][col span="1/4"]  [/col] [/row]</textarea></a></li>
             <li><a href="#" class="ux-add-div" data-shortcode="row"><img src="<?php echo $builder_url.'img/shortcodes/col_1_4_2_4_1_4.jpg'; ?>"/><span>1/4 | 2/4 | 1/4</span><textarea>[row] [col span="1/4"]  [/col] [col span="2/4"]  [/col][col span="1/4"]  [/col] [/row]</textarea></a></li>
-            <li><a href="#" class="ux-add-div" data-shortcode="row"><img src="<?php echo $builder_url.'img/shortcodes/col_1_4_3_4.jpg'; ?>"/><span>1/4 | 3/4</span><textarea>[row] [col span="1/4"] [/col][col span="3/4"] [/row]</textarea></a></li>
+            <li><a href="#" class="ux-add-div" data-shortcode="row"><img src="<?php echo $builder_url.'img/shortcodes/col_1_4_3_4.jpg'; ?>"/><span>1/4 | 3/4</span><textarea>[row] [col span="1/4"] [/col] [col span="3/4"]  [/col] [/row]</textarea></a></li>
         </ul>
              <div class="lightbox-tools bottom">
                     <a href="#" class="close-lightbox button media-button button-secondary button-large">Cancel</a>
             </div>
       </div>
 </div>
+
+
+<!--Add Code -->
+<div class="ux-lightbox" data-add="code">
+      <div class="ux-lightbox-inner ux-centered">
+            <div style="margin:30px;">
+              <textarea style="display:block!important;width:100%;height:300px;" placeholder="Paste shortcodes here"></textarea>
+            </div>     
+             <div class="lightbox-tools bottom">
+                    <a href="#" class="close-lightbox button media-button button-secondary button-large">Cancel</a>
+                    <a href="#" class="ux-add-div ux-get-code button media-button button-primary button-large">Insert</a>
+            </div>
+      </div>
+</div>
+
 
 
 <!-- Elements -->
@@ -167,7 +183,7 @@ $default_elements ='
              <li><a href="#" class="ux-add-div" data-shortcode="accordion"><img src="<?php echo $builder_url.'img/shortcodes/element_accordion.jpg'; ?>"/><span>Accordion</span><textarea>[accordion title="Title"][accordion-item title="Accordion title"]Accordion content[/accordion-item][accordion-item title="Accordion title"]Accordion content[/accordion-item][accordion-item title="Accordion title"]Accordion content[/accordion-item][/accordion]</textarea></a></li>
              <li><a href="#" class="ux-add-div" data-shortcode="tabs"><img src="<?php echo $builder_url.'img/shortcodes/element_tabs.jpg'; ?>"/><span>Tabs</span><textarea>[tabgroup style="normal"][tab title="Tab title"]Enter content here[/tab][tab title="Tab title"]Enter content here[/tab][tab title="Tab title"]Enter content here[/tab][/tabgroup]</textarea></a></li>
              <li><a href="#" class="ux-add-div" data-shortcode="vertical_tabs"><img src="<?php echo $builder_url.'img/shortcodes/element_vertical_tabs.jpg'; ?>"/><span>Vertical Tabs</span><textarea>[tabgroup_vertical][tab title="Tab title"]Enter content here[/tab][tab title="Tab title"]Enter content here[/tab][tab title="Tab title"]Enter content here[/tab][/tabgroup_vertical]</textarea></a></li>
-             <li><a href="#" class="ux-add-div" data-shortcode="testemoial"><img src="<?php echo $builder_url.'img/shortcodes/element_testemonial.jpg'; ?>"/><span>Testemonial</span><textarea>[testimonial image="http://imageurl" name="Author name" company="Company name" stars="5"] Add testemonial text here [/testimonial]</textarea></a></li>
+             <li><a href="#" class="ux-add-div" data-shortcode="testemoial"><img src="<?php echo $builder_url.'img/shortcodes/element_testimonial.jpg'; ?>"/><span>Testimonial</span><textarea>[testimonial image="http://imageurl" name="Author name" company="Company name" stars="5"] Add testimonial text here [/testimonial]</textarea></a></li>
              <li><a href="#" class="ux-add-div" data-shortcode="team_member"><img src="<?php echo $builder_url.'img/shortcodes/element_team_member.jpg'; ?>"/><span>Team Member</span><textarea>[team_member name="Name" title="Title" facebook="http://" twitter="http://" pinterest="http://"  img="http://imageurl"]Team member description[/team_member]</textarea></a></li>
              <li><a href="#" class="ux-add-div" data-shortcode="featured_box"><img src="<?php echo $builder_url.'img/shortcodes/element_featured_box.jpg'; ?>"/><span>Featured Box</span><textarea>[featured_box title="Title text" img="http://iconurl" img_width="" pos="center" link=""]Featured box text[/featured_box]</textarea></a></li>
              <li><a href="#" class="ux-add-div" data-shortcode="featured_items"><img src="<?php echo $builder_url.'img/shortcodes/element_featured_items.jpg'; ?>"/><span>Featured Items</span><textarea>[featured_items_slider style="1" items="8" cat="" height="250px"][featured_items_grid style="1" items="8" cat="" height="250px"]</textarea></a></li>
@@ -239,6 +255,8 @@ $default_elements ='
             <li><a href="#" class="ux-add-div"><img src="<?php echo $builder_url.'img/shortcodes/banner_12.jpg'; ?>"/><textarea>[ux_banner height="400px" text_color="light" animated="fadeIn" text_width="66%" text_align="center" text_pos="center" parallax="0" parallax_text="0" ] <h1 class="text-boarder-top-bottom-white">NEW ARRIVALS</h1> <a class="button alt-button white" href="http://#">SHOP NOW</a>[/ux_banner]</textarea></a></li>
 
             </ul>
+             <strong style="padding:15px;">TIP: Add normal Image instead of Banner if you want the image / slider to crop normal on smaller screens.</strong>
+
                <div class="lightbox-tools bottom">
                     <a href="#" class="close-lightbox button media-button button-secondary button-large">Cancel</a>
             </div>

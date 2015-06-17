@@ -2,26 +2,28 @@
 /**
  * Variable product add to cart
  *
- * @author 		WooThemes
- * @package 	WooCommerce/Templates
- * @version     2.1.0
+ * @author  WooThemes
+ * @package WooCommerce/Templates
+ * @version 2.3.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-global $woocommerce, $product, $post;
+global $product, $post;
 ?>
 
 <?php do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 
 <form class="variations_form cart" method="post" enctype='multipart/form-data' data-product_id="<?php echo $post->ID; ?>" data-product_variations="<?php echo esc_attr( json_encode( $available_variations ) ) ?>">
 	<?php if ( ! empty( $available_variations ) ) : ?>
-		<table class="variations custom" cellspacing="0">
+		<table class="variations" cellspacing="0">
 			<tbody>
 				<?php $loop = 0; foreach ( $attributes as $name => $options ) : $loop++; ?>
 					<tr>
-						<td class="label"><label for="<?php echo sanitize_title($name); ?>"><?php echo wc_attribute_label( $name ); ?></label></td>
-						<td class="value"><div class="select-wrapper"><select class="custom" id="<?php echo esc_attr( sanitize_title( $name ) ); ?>" name="attribute_<?php echo sanitize_title( $name ); ?>">
+						<td class="label"><label for="<?php echo sanitize_title( $name ); ?>"><?php echo wc_attribute_label( $name ); ?></label></td>
+						<td class="value"><div class="select-wrapper custom"><select id="<?php echo esc_attr( sanitize_title( $name ) ); ?>" name="attribute_<?php echo sanitize_title( $name ); ?>" data-attribute_name="attribute_<?php echo sanitize_title( $name ); ?>">
 							<option value=""><?php echo __( 'Choose an option', 'woocommerce' ) ?>&hellip;</option>
 							<?php
 								if ( is_array( $options ) ) {
@@ -37,28 +39,15 @@ global $woocommerce, $product, $post;
 									// Get terms if this is a taxonomy - ordered
 									if ( taxonomy_exists( $name ) ) {
 
-										$orderby = wc_attribute_orderby( $name );
-
-										switch ( $orderby ) {
-											case 'name' :
-												$args = array( 'orderby' => 'name', 'hide_empty' => false, 'menu_order' => false );
-											break;
-											case 'id' :
-												$args = array( 'orderby' => 'id', 'order' => 'ASC', 'menu_order' => false, 'hide_empty' => false );
-											break;
-											case 'menu_order' :
-												$args = array( 'menu_order' => 'ASC', 'hide_empty' => false );
-											break;
-										}
-
-										$terms = get_terms( $name, $args );
+										$terms = wc_get_product_terms( $post->ID, $name, array( 'fields' => 'all' ) );
 
 										foreach ( $terms as $term ) {
-											if ( ! in_array( $term->slug, $options ) )
+											if ( ! in_array( $term->slug, $options ) ) {
 												continue;
-
+											}
 											echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( sanitize_title( $selected_value ), sanitize_title( $term->slug ), false ) . '>' . apply_filters( 'woocommerce_variation_option_name', $term->name ) . '</option>';
 										}
+
 									} else {
 
 										foreach ( $options as $option ) {
@@ -68,9 +57,10 @@ global $woocommerce, $product, $post;
 									}
 								}
 							?>
-						</select></div> <?php
-							if ( sizeof($attributes) == $loop )
+						</select></div><!-- .custom-select --> <?php
+							if ( sizeof( $attributes ) === $loop ) {
 								echo '<a class="reset_variations" href="#reset">' . __( 'Clear selection', 'woocommerce' ) . '</a>';
+							}
 						?></td>
 					</tr>
 		        <?php endforeach;?>
@@ -85,14 +75,13 @@ global $woocommerce, $product, $post;
 			<div class="single_variation"></div>
 
 			<div class="variations_button">
-				<button type="submit" class="single_add_to_cart_button button alt"><?php echo $product->single_add_to_cart_text(); ?></button>
+				<button type="submit" class="single_add_to_cart_button button secondary"><?php echo $product->single_add_to_cart_text(); ?></button>
 				<?php woocommerce_quantity_input(); ?>
-
 			</div>
 
 			<input type="hidden" name="add-to-cart" value="<?php echo $product->id; ?>" />
 			<input type="hidden" name="product_id" value="<?php echo esc_attr( $post->ID ); ?>" />
-			<input type="hidden" name="variation_id" value="" />
+			<input type="hidden" name="variation_id" class="variation_id" value="" />
 
 			<?php do_action( 'woocommerce_after_single_variation' ); ?>
 		</div>

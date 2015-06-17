@@ -4,7 +4,6 @@
 function deactivate_featured_item_conditional() {
     if ( is_plugin_active('ux-featured-item/portfolio-post-type.php') ) {
 	    deactivate_plugins( 'ux-featured-item/portfolio-post-type.php' );
-	    flush_rewrite_rules();
     }
 }
 add_action( 'admin_init', 'deactivate_featured_item_conditional' );
@@ -37,6 +36,7 @@ class Featured_Item_Post_Type {
 
 		// Add taxonomy terms as body classes
 		add_filter( 'body_class', array( $this, 'add_body_classes' ) );
+		
 	}
 
 	/**
@@ -78,6 +78,8 @@ class Featured_Item_Post_Type {
 		return array( 'featured_item_category', 'featured_item_tag' );
 	}
 
+
+
 	/**
 	 * Enable the Featured Item custom post type.
 	 *
@@ -118,9 +120,10 @@ class Featured_Item_Post_Type {
 		);
 
 		$args = apply_filters( 'featured_itemposttype_args', $args );
-
 		register_post_type( 'featured_item', $args );
 	}
+
+
 
 	/**
 	 * Register a taxonomy for Featured Item Tags.
@@ -206,62 +209,67 @@ class Featured_Item_Post_Type {
 		$args = apply_filters( 'featured_itemposttype_category_args', $args );
 
 		register_taxonomy( 'featured_item_category', array( 'featured_item' ), $args );
-		
-		//global $flatsome_opt;
-		//$items_link = $flatsome_opt['featured_item_custom_link'];
-		
-		//add_action( 'wp_loaded', 'add_featured_item_permastructure' );
-		function add_featured_item_permastructure($items_link) {
-			global $wp_rewrite;
-			add_permastruct( 'featured_item_category', $items_link.'/%featured_item_category%', false );
-			add_permastruct( 'featured_item', $items_link.'/%featured_item_category%/%featured_item%', false );
-		}
+	
+		global $flatsome_opt;
 
-		//add_filter( 'post_type_link', 'recipe_permalinks', 10, 2 );
-		function recipe_permalinks( $permalink, $post ) {
-			if ( $post->post_type !== 'featured_item' )
+		if(isset($flatsome_opt['featured_items_page']) && $flatsome_opt['featured_items_page']){
+			add_action( 'wp_loaded', 'add_ux_featured_item_permastructure' );
+			function add_ux_featured_item_permastructure() {
+				global $wp_rewrite, $flatsome_opt;
+				$items_link = $flatsome_opt['featured_items_page'];
+				add_permastruct( 'featured_item_category',  $items_link.'/%featured_item_category%', false );
+				add_permastruct( 'featured_item', $items_link.'/%featured_item_category%/%featured_item%', false );
+			}
+
+			add_filter( 'post_type_link', 'ux_featured_items_permalinks', 10, 2 );
+			function ux_featured_items_permalinks( $permalink, $post ) {
+				if ( $post->post_type !== 'featured_item' )
+					return $permalink;
+			 
+				$terms = get_the_terms( $post->ID, 'featured_item_category' );
+				
+				if ( ! $terms )
+					return str_replace( '%featured_item_category%', '', $permalink );
+			 
+				$post_terms = array();
+				foreach ( $terms as $term )
+					$post_terms[] = $term->slug;
+			 
+				return str_replace( '%featured_item_category%', implode( ',', $post_terms ) , $permalink );
+			}
+
+
+
+			// Make sure that all term links include their parents in the permalinks
+			add_filter( 'term_link', 'add_term_parents_to_permalinks', 10, 2 );
+			 
+			function add_term_parents_to_permalinks( $permalink, $term ) {
+				$term_parents = get_term_parents( $term );
+			 
+				foreach ( $term_parents as $term_parent )
+					$permlink = str_replace( $term->slug, $term_parent->slug . ',' . $term->slug, $permalink );
+			 
 				return $permalink;
-		 
-			$terms = get_the_terms( $post->ID, 'featured_item_category' );
-			
-			if ( ! $terms )
-				return str_replace( '%featured_item_category%', '', $permalink );
-		 
-			$post_terms = array();
-			foreach ( $terms as $term )
-				$post_terms[] = $term->slug;
-		 
-			return str_replace( '%featured_item_category%', implode( ',', $post_terms ) , $permalink );
-		}
+			}
+			 
+			// Helper function to get all parents of a term
+			function get_term_parents( $term, &$parents = array() ) {
+				$parent = get_term( $term->parent, $term->taxonomy );
+				
+				if ( is_wp_error( $parent ) )
+					return $parents;
+				
+				$parents[] = $parent;
+			 
+				if ( $parent->parent )
+					get_term_parents( $parent, $parents );
+			 
+			    return $parents;
+			}
 
-
-
-		// Make sure that all term links include their parents in the permalinks
-		//add_filter( 'term_link', 'add_term_parents_to_permalinks', 10, 2 );
-		 
-		function add_term_parents_to_permalinks( $permalink, $term ) {
-			$term_parents = get_term_parents( $term );
-		 
-			foreach ( $term_parents as $term_parent )
-				$permlink = str_replace( $term->slug, $term_parent->slug . ',' . $term->slug, $permalink );
-		 
-			return $permalink;
-		}
-		 
-		// Helper function to get all parents of a term
-		function get_term_parents( $term, &$parents = array() ) {
-			$parent = get_term( $term->parent, $term->taxonomy );
-			
-			if ( is_wp_error( $parent ) )
-				return $parents;
-			
-			$parents[] = $parent;
-		 
-			if ( $parent->parent )
-				get_term_parents( $parent, $parents );
-		 
-		    return $parents;
-							}
+		} // Set custom permalinks
+		
+		
 
 
 	}
@@ -318,7 +326,6 @@ class Featured_Item_Post_Type {
 		global $post;
 		switch ( $column ) {
 			case 'thumbnail':
-				echo 'lol';
 				echo get_the_post_thumbnail( $post->ID, array(35, 35) );
 				break;
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /*
 Title		: SMOF
 Description	: Slightly Modified Options Framework
@@ -42,7 +43,7 @@ if( function_exists( 'wp_get_theme' ) ) {
 	$theme_uri = $theme_obj->get('ThemeURI');
 	$author_uri = $theme_obj->get('AuthorURI');
 } else {
-	$theme_data = get_theme_data( get_template_directory().'/style.css' );
+	$theme_data = wp_get_theme( get_template_directory().'/style.css' );
 	$theme_version = $theme_data['Version'];
 	$theme_name = $theme_data['Name'];
 	$theme_uri = $theme_data['ThemeURI'];
@@ -93,3 +94,163 @@ require_once ( ADMIN_PATH . 'classes/class.options_machine.php' );
  * @since 1.0.0
  */
 add_action('wp_ajax_of_ajax_post_action', 'of_ajax_callback');
+
+
+/* Theme Option Menu */
+
+function flatsome_theme_option_dropdown() {
+ global $wp_admin_bar;
+
+ // Add a new top level menu link
+if (current_user_can( 'manage_options' ) ){
+ 
+  $optionUrl = get_admin_url().'themes.php?page=optionsframework';
+
+  // top menu
+  $wp_admin_bar->add_menu( array(
+	 'parent' => false,
+	 'id' => 'theme_options',
+	 'title' => 'Theme Options',
+	 'href' => $optionUrl,
+
+ ));
+
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_globalsettings',
+   'title' => 'Global settings',
+   'href' => $optionUrl.'&tab=of-option-globalsettings',
+ ));
+
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_htmlblocks_custom_css',
+   'title' => 'Custom CSS',
+   'href' => $optionUrl.'&tab=of-option-customcss',
+ ));
+
+
+  // Logo and Icons
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_logo_icons',
+   'title' => 'Logo and Icons',
+   'href' => $optionUrl.'&tab=of-option-logoandicons',
+ ));
+
+    // Logo and Icons
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_layout',
+   'title' => 'Layout',
+   'href' => $optionUrl.'&tab=of-option-layout',
+ ));
+
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_header',
+   'title' => 'Header',
+   'href' => $optionUrl.'&tab=of-option-header',
+ ));
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_footer',
+   'title' => 'Footer',
+   'href' => $optionUrl.'&tab=of-option-footer',
+ ));
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_fonts',
+   'title' => __('Fonts', 'ux-admin'),
+   'href' => $optionUrl.'&tab=of-option-fonts',
+ ));
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_styleandcolor',
+   'title' => 'Style and Colors',
+   'href' => $optionUrl.'&tab=of-option-styleandcolors',
+ ));
+
+if(ux_is_woocommerce_active()) { 
+      $wp_admin_bar->add_menu( array(
+     'parent' => 'theme_options',
+     'id' => 'theme_options_productpage',
+     'title' => 'Product Page',
+     'href' => $optionUrl.'&tab=of-option-productpage',
+   ));
+
+
+      $wp_admin_bar->add_menu( array(
+     'parent' => 'theme_options',
+     'id' => 'theme_options_categorypage',
+     'title' => 'Catagory Page',
+     'href' => $optionUrl.'&tab=of-option-categorypage',
+   ));
+
+    $wp_admin_bar->add_menu( array(
+     'parent' => 'theme_options',
+     'id' => 'theme_options_accountandsocial',
+     'title' => 'Cart and Checkout',
+     'href' => $optionUrl.'&tab=of-option-cartandcheckout',
+   ));
+
+      $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_catalogmode',
+   'title' => 'Catalog Mode',
+   'href' => $optionUrl.'&tab=of-option-catalogmode',
+ )); 
+
+  }
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_blog',
+   'title' => 'Blog',
+   'href' => $optionUrl.'&tab=of-option-blog',
+ ));
+
+ $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_featureditems',
+   'title' => 'Featured Items',
+   'href' => $optionUrl.'&tab=of-option-featureditems',
+ ));
+
+
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_socialandsharing',
+   'title' => 'Social and Sharing',
+   'href' => $optionUrl.'&tab=of-option-socialandsharing',
+ ));
+
+
+
+
+ $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_options_backupandimport',
+   'title' => 'Backup and Import',
+   'href' => $optionUrl.'&tab=of-option-backupandimport',
+ ));
+
+  $wp_admin_bar->add_menu( array(
+   'parent' => 'theme_options',
+   'id' => 'theme_docs',
+   'title' => '-- Documentation --',
+   'href' => ' http://uxthemes.helpscoutdocs.com',
+ ));
+
+
+
+}
+}
+add_action( 'wp_before_admin_bar_render', 'flatsome_theme_option_dropdown' , 1 );

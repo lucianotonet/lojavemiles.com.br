@@ -1,12 +1,127 @@
+--- 2.5.3 ---
+FIXED: Missing select boxes.
+FIXED: iPad horizontal navigation.
+FIXED: Hide slider on mobile phones.
+FIXED: Various CSS bugs.
+
+
+--- 2.5.2 ---
+FIXED: Custom styles in style.css now works with minified CSS enabled.
+FIXED: Style.css for Child themes updated. You can remove the @import css tag.
+FIXED: Various CSS glitches and bugs.
+FIXED: Cleaned up all SCSS files.
+FIXED: Wishlist now works for non-logged in users.
+
+
+--- 2.5 ---
+NEW: Smoother and faster mobile menu.
+NEW: Filter button added for mobile category view with sidebar.
+
+NEW OPTION: Possible to hide UX Slider on mobile screens. [ux_slider mobile="false"]
+NEW OPTION: Blog Post Grid / masonry style. [blog_post type="grid"] [blog_post type="masonry"]
+NEW OPTION: Open lightboxes automatically! [lightbox auto_open="true" auto_timer="3000" auto_show="always/once"]
+NEW OPTION: Add ID attributes to sections and row shortcodes. (id="example")
+NEW OPTION: 'Continue Shopping' button added to Checkout and Thank you page (optional). 
+NEW OPTION: Category list view.
+NEW OPTION: Custom Sticky header logo.
+NEW OPTION: Off-canvas Shop sidebar / Filter button.
+NEW OPTION: Set custom mobile main navigation.
+NEW OPTION: Replace share icons with custom icons or share scripts.
+NEW OPTION: Change product pr row on Category pages.
+NEW OPTION: Add Cart and Account dropdown to Top bar.
+NEW OPTION: Add HTML / Shortcodes to Top Bar right side.
+NEW OPTION: Change Featured Items URL.
+
+
+FIXED: Outdated WooCommerce files
+FIXED: Various CSS and JS fixes and cleaning.
+FIXED: Compatible with YITH Ajax Search Premium version.
+FIXED: Various RTL CSS bugs
+FIXED: Various bugs with the UX Slider.
+FIXED: Various Windows Phone bugs.
+FIXED: Setting main nav right + catalog mode now works.
+FIXED: Updated TGM Plugin Activation plugin to latest version.
+FIXED: Search disappearing in latest Ajax Search plugin version.
+FIXED: Various problems with WordPress 4.2
+FIXED: Plugin support for Nested Category plugin.
+
+Important file changes: 
+functions.php, header.php, theme.js has been changed.
+You need to update them if you use them in your child theme.
+
+
+--- 2.2.3 ----
+FIXED: Nofollow added to Share and Follow icons.
+FIXED: Product slider only show half sometimes.
+FIXED: Shipping Calculator sometimes does not update.
+FIXED: Problems with uploading images in Page Builder and latest WordPress version.
+FIXED: Various CSS bugs.
+
+NEW OPTION: Show 'In Stock' text on product page.
+NEW OPTION: Full height right sidebar on product page.
+NEW OPTION: Full width product page.
+
+
+--- 2.2.1 ----
+FIX: Wishlist issues with WooCommerce 2.3
+FIX: Add to cart from grid now works with WooCommerce 2.3
+FIX: Outdated WooCommerce template files.
+FIX: Various layout bugs.
+
+--- 2.2 ----
+IMPORTANT FIX: Compatible with WooCommerce 2.3!
+
+NEW OPTION: Upload Footer background image.
+NEW OPTION: Option to change footer 1 and footer 2 columns (6, 4, 3, 2, 1).
+NEW OPTION: New grid option. Add to cart button below name/price.
+NEW OPTION: Boxed and Framed product grid style.
+NEW OPTION: Pinterest/Masonry Product grid option.
+NEW OPTION: Add HMTL or Shortcodes after a Blog post.
+
+NEW: Flatsome Child Theme now has a custom function file.
+
+FIXED: Cart total in header is now correct.
+FIXED: Animation glitch on animated banners.
+FIXED: Product Zoom scrolling bugs for mobile devices.
+FIXED: Various CSS fixes.
+
+
+--- 2.1 ---
+NEW OPTION: Quick Zoom on product page.
+NEW OPTION: Simple Maintenance Mode option
+NEW OPTION: Select header presets in Theme Options.
+NEW OPTION: Add scripts to the Thank You page in Theme Options > HTML Blocks.
+NEW OPTION: Add scripts to HEAD in Theme Option > HTML Blocks
+NEW OPTION: Added size="" to [search] to make search box bigger or smaller.
+NEW OPTION: Change color of "New" bubble in Theme Options > Style and Colors.
+NEW OPTION: Insert shortcode snippets into the page builder.
+
+IMPROVED: Cleaner Theme Option panel + Theme Option dropdown for quick access.
+IMPROVED: Flatsome Page Builder
+IMPROVED: Various CSS improvements.
+IMPROVED: Products sliders on mobile and tablets.
+
+FIXED: Outdated template files for WooCommerce 2.2.7 + 2.2.8
+FIXED: [logo] link now works.
+FIXED: IE11 Banner Grid bug.
+FIXED: Pagination problems with search results.
+FIXED: Email icon on Wishlist now visible.
+FIXED: Product search in admin.
+
+
 --- 2.0.5 ---
 NEW: Added parallax effect to columns.
 NEW: Added image to UX Sections (top, left, bottom, right).
 NEW: Added class="" to [section], [row] and [col]
 
+NEW OPTION: Added order="" to Featured Items.
+
 FIX: Javascript errors with some plugins.
 FIX: Compability with WooCommerce Bulk Variations plugin.
 FIX: Social icons was hidden on dark header.
 FIX: Background position on UX Banners.
+FIX: RTL improvments
+
 
 --- 2.0.1 ---
 NEW: Custom CSS block is now minified.
@@ -17,7 +132,6 @@ FIX: Various CSS bugs reported by users.
 FIX: Various CSS improvements.
 FIX: Product image slider on Android.
 FIX: Flatsome Builder improvements.
-
 
 --- 2.0 ---
 NEW: Flatsome Page Builder added (BETA)

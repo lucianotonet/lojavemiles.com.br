@@ -37,7 +37,7 @@ if($flatsome_opt['blog_post_style'] == 'big-featured-image') { ?>
 	if( has_post_thumbnail() ) $bg = get_post_thumbnail_id();
 	
 	$header_html = ob_get_contents();
-	$header_html = '[ux_banner animate="fadeInDown" bg_overlay="#000" parallax="8" parallax_text="2" height="360px" bg="'.$bg.'"]'.$header_html.'[/ux_banner]';
+	$header_html = '[ux_banner animate="fadeInDown" bg_overlay="#000" parallax="3" parallax_text="2" height="360px" bg="'.$bg.'"]'.$header_html.'[/ux_banner]';
 	
 	ob_end_clean();
 	echo do_shortcode($header_html);
@@ -65,6 +65,10 @@ if($flatsome_opt['blog_post_style'] == 'big-featured-image') { ?>
 		<?php while ( have_posts() ) : the_post(); ?>
 
 			<?php get_template_part( 'content', 'single' ); ?>
+		
+			<?php // Add content after blog post
+			if($flatsome_opt['blog_after_post']){ echo do_shortcode($flatsome_opt['blog_after_post']);}
+			?>		
 
 			<?php
 				// If comments are open or we have at least one comment, load up the comment template
@@ -73,6 +77,9 @@ if($flatsome_opt['blog_post_style'] == 'big-featured-image') { ?>
 			?>
 
 		<?php endwhile; // end of the loop. ?>
+
+		
+	
 		</div><!-- .page-inner -->
 	</div><!-- #content -->
 

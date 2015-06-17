@@ -1,176 +1,143 @@
 /* add browser info to HTML tag */
 var doc = document.documentElement; doc.setAttribute('data-useragent', navigator.userAgent);
 
+
 ;(function ($) {
 "use strict";
 
-/* Install Responsive jPanel */
-var jPM = $.jPanelMenu({
-    menu: '#site-navigation',
-    trigger: '.mobile-menu a',
-    animated: false,
-    afterOpen: function(){$('.mob-helper').addClass('active');},
-    afterClose: function(){ setTimeout(function(){$('.mob-helper').removeClass('active');}, 300);}
+
+// Disable fast click for touch devices
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+  $('.header-nav .nav-top-link').addClass('needsclick');
+}
+
+// Run fastclick script
+FastClick.attach(document.body);
+
+
+// Mobile sidebar menu toggle
+$('.mobile-sidebar li.menu-item-has-children > ul, .mobile-sidebar li.menu-item-has-children > a[href="#"]').click(function(e){
+    $(this).parent().toggleClass('open');
 });
 
-/* Setup breakpoints for responsive JS activations */
-var jRes = jRespond([
-    {
-        label: 'small',
-        enter: 0,
-        exit: 768
-    },{
-        label: 'medium',
-        enter: 768,
-        exit: 980
-    },{
-        label: 'large',
-        enter: 980,
-        exit: 10000
-    }
-]);
 
-
-/******* MOBILE BREAKPOINT SCRIPTS ********/
-jRes.addFunc({
-    breakpoint: 'small',
-    enter: function() {
-        /* start jPanelMenu */
-        jPM.on();
-        
-        /* move account nav into jPanel menu */
-        $('li.account-dropdown').clone().removeClass('hide-for-small').appendTo($('#jPanelMenu-menu'));
-        
-         /* move search into mobile navigation */
-        $('.header-wrapper .search-wrapper').clone().removeClass('hide-for-small').prependTo($('#jPanelMenu-menu')).wrap('<li></li>');
-
-        $('.html-block-inner').clone().removeClass('hide-for-small').appendTo($('#jPanelMenu-menu')).wrap('<li></li>');
-
-        /* move top nav into jPanel menu */
-        $('ul.top-bar-nav').clone().removeClass('hide-for-small').appendTo($('#jPanelMenu-menu')).wrap( "<li class='top-bar-items'></li>" );
-
-        /* make mobile links with sub menu dropdown on click */
-        $('.menu-parent-item > .nav-top-link, .account-dropdown > .nav-top-login').click(function(e){
-          $(this).parent().toggleClass('open');
-          e.preventDefault();
-        });
+// Mobile sidebar open
+$('a.off-canvas-overlay').magnificPopup({
+  removalDelay: 300, 
+  closeBtnInside: true,
+  callbacks: {
+    beforeOpen: function() {
+       this.st.mainClass = 'off-canvas '+this.st.el.attr('data-pos')+' '+this.st.el.attr('data-color');
     },
-    exit: function() {
-        jPM.off();
-    }
-});
-
-
-/******* DESKTOP BREAKPOINT SCRIPTS ********/
-jRes.addFunc({
-    breakpoint: ['large','medium'],
-    enter: function() {
-
-        /* DROPDOWN SCRIPT */
-        $('.nav-top-link').parent().hoverIntent(
-            function () {
-                 var max_width = '1080';
-                 if(max_width > $(window).width()) {max_width = $(window).width();}
-                 $(this).find('.nav-dropdown').css('max-width',max_width);
-                 $(this).find('.nav-dropdown').fadeIn(20);
-                 $(this).addClass('active');
-                 /* fix dropdown if it has too many columns */
-                 var dropdown_width = $(this).find('.nav-dropdown').outerWidth();
-                 var col_width =  $(this).find('.nav-dropdown > ul > li.menu-parent-item').width();
-                 var cols = ($(this).find('.nav-dropdown > ul > li.menu-parent-item').length) + ($(this).find('.nav-dropdown').find('.image-column').length);
-                 var col_must_width = cols*col_width;
-                 if($('.wide-nav').hasClass('nav-center')){
-                  $(this).find('.nav-dropdown').css('margin-left','-70px');
-                }
-
-                 if(col_must_width > dropdown_width){
-                    $(this).find('.nav-dropdown').width(col_must_width);
-                    $(this).find('.nav-dropdown').addClass('no-arrow');
-                    $(this).find('.nav-dropdown').css('left','auto');
-                    $(this).find('.nav-dropdown').css('right',0);
-                    $(this).find('ul:after').remove();
-                 }
-            },
-            function () {
-                  $(this).find('.nav-dropdown').fadeOut(20);
-                  $(this).removeClass('active');
-            }
-        );
-
-         /* WPML dropdown */
-         $('.menu-item-language-current').hoverIntent(
-            function () {
-                 $(this).find('.sub-menu').fadeIn(50);
-
-            },
-            function () {
-                 $(this).find('.sub-menu').fadeOut(50);
-            }
-        );
-        
-
-        /* SEARCH DROPDOWN */
-         $('.search-dropdown').hoverIntent(
-            function () {
-                 if($('.wide-nav').hasClass('nav-center')){
-                    $(this).find('.nav-dropdown').css('margin-left','-85px');
-                  }
-                 $(this).find('.nav-dropdown').fadeIn(50);
-                 $(this).addClass('active');
-                 $(this).find('input').focus();
-
-            },
-            function () {
-                 $(this).find('.nav-dropdown').fadeOut(50);
-                 $(this).removeClass('active');
-                 $(this).find('input').blur();
-            }
-        );
-
-
-         /* PRODUCT NEXT / PREV NAV */
-         $('.prod-dropdown').hoverIntent(
-            function () {
-                 $(this).find('.nav-dropdown').fadeIn(50);
-                 $(this).addClass('active');
-
-            },
-            function () {
-                 $(this).find('.nav-dropdown').fadeOut(50);
-                 $(this).removeClass('active');
-            }
-        );
-
-         /* CART DROPDOWN */
-         $('.cart-link').parent().parent().hoverIntent(
-            function () {
-                 $(this).find('.nav-dropdown').fadeIn(50);
-                 $(this).addClass('active');
-
-            },
-            function () {
-                 $(this).find('.nav-dropdown').fadeOut(50);
-                 $(this).removeClass('active');
-            }
-          );
+    open: function () {
+       $('html').addClass('has-off-canvas push-' +this.st.el.attr('data-pos'));
     },
-    exit: function() {
+    beforeClose: function() {
+       $('html').removeClass('has-off-canvas push-' +this.st.el.attr('data-pos'));
     }
+  }
 });
 
+
+/******** Dropdown Scripts ***********/
+$('.nav-top-link').parent().hoverIntent(
+  function () {
+       var max_width = '1080';
+       if(max_width > $(window).width()) {max_width = $(window).width();}
+       $(this).find('.nav-dropdown').css('max-width',max_width);
+       $(this).find('.nav-dropdown').fadeIn(20);
+       $(this).addClass('active');
+       /* fix dropdown if it has too many columns */
+       var dropdown_width = $(this).find('.nav-dropdown').outerWidth();
+       var col_width =  $(this).find('.nav-dropdown > ul > li.menu-parent-item').width();
+       var cols = ($(this).find('.nav-dropdown > ul > li.menu-parent-item').length) + ($(this).find('.nav-dropdown').find('.image-column').length);
+       var col_must_width = cols*col_width;
+       if($('.wide-nav').hasClass('nav-center')){
+        $(this).find('.nav-dropdown').css('margin-left','-70px');
+      }
+
+       if(col_must_width > dropdown_width){
+          $(this).find('.nav-dropdown').width(col_must_width);
+          $(this).find('.nav-dropdown').addClass('no-arrow');
+          $(this).find('.nav-dropdown').css('left','auto');
+          $(this).find('.nav-dropdown').css('right',0);
+          $(this).find('ul:after').remove();
+       }
+  },
+  function () {
+        $(this).find('.nav-dropdown').fadeOut(20);
+        $(this).removeClass('active');
+  }
+);
+
+/* WPML dropdown */
+$('.menu-item-language-current').hoverIntent(
+  function () {
+       $(this).find('.sub-menu').fadeIn(50);
+
+  },
+  function () {
+       $(this).find('.sub-menu').fadeOut(50);
+  }
+);
+
+
+/* SEARCH DROPDOWN */
+$('.search-dropdown').hoverIntent(
+  function () {
+       if($('.wide-nav').hasClass('nav-center')){
+          $(this).find('.nav-dropdown').css('margin-left','-85px');
+        }
+       $(this).find('.nav-dropdown').fadeIn(50);
+       $(this).addClass('active');
+       $(this).find('input').focus();
+
+  },
+  function () {
+       $(this).find('.nav-dropdown').fadeOut(50);
+       $(this).removeClass('active');
+       $(this).find('input').blur();
+  }
+);
+
+
+/* PRODUCT NEXT / PREV NAV */
+$('.prod-dropdown').hoverIntent(
+  function () {
+       $(this).find('.nav-dropdown').fadeIn(50);
+       $(this).addClass('active');
+
+  },
+  function () {
+       $(this).find('.nav-dropdown').fadeOut(50);
+       $(this).removeClass('active');
+  }
+);
+
+/* CART DROPDOWN */
+$('.cart-link').parent().parent().hoverIntent(
+  function () {
+       $(this).find('.nav-dropdown').fadeIn(50);
+       $(this).addClass('active');
+
+  },
+  function () {
+       $(this).find('.nav-dropdown').fadeOut(50);
+       $(this).removeClass('active');
+  }
+);
 
 /******** GLOBAL LIGHTBOX SCRIPTS ***********/
   /* add popup for product slider */
   $('.gallery-popup').magnificPopup({
       delegate: 'a',
       type: 'image',
-      tLoading: '<div class="loading dark"><i></i><i></i><i></i><i></i></div>',
-      mainClass: 'my-mfp-zoom-in product-zoom-lightbox',
+      tLoading: '<div class="ux-loading dark"><i></i><i></i><i></i><i></i></div>',
       removalDelay: 300,
       closeOnContentClick: true,
       gallery: {
           enabled: true,
-           navigateByImgClick: false,
+          navigateByImgClick: false,
           preload: [0,1] // Will preload 0 - before current, and 1 after the current image
       },
       image: {
@@ -182,9 +149,9 @@ jRes.addFunc({
    /* add lightbox for images */
   $("*[id^='attachment'] a, a.image-lightbox, .entry-content a[href$='.jpg'], .entry-content a[href$='.jpeg']").not('.gallery a[href$=".jpg"], .gallery a[href$=".jpeg"]').magnificPopup({
     type: 'image',
-    tLoading: '<div class="loading dark"><i></i><i></i><i></i><i></i></div>',
+    tLoading: '<div class="ux-loading dark"><i></i><i></i><i></i><i></i></div>',
     closeOnContentClick: true,
-    mainClass: 'my-mfp-zoom-in',
+    removalDelay: 300,
     image: {
       verticalFit: false
     }
@@ -192,11 +159,11 @@ jRes.addFunc({
 
 
    /* add lightbox for blog galleries */
-  $(".gallery a[href$='.jpg'],.gallery a[href$='.jpeg'],.featured-item a[href$='.jpeg'],.featured-item a[href$='.gif'],.featured-item a[href$='.jpg'], .page-featured-item .slider a[href$='.jpg'], .page-featured-item a[href$='.jpg'],.page-featured-item .slider a[href$='.jpeg'], .page-featured-item a[href$='.jpeg'], .gallery a[href$='.png'], .gallery a[href$='.jpeg'], .gallery a[href$='.gif']").parent().magnificPopup({
+  $(".column-inner a[href$='.jpg'], .column-inner a[href$='.jpeg'], .gallery a[href$='.jpg'],.gallery a[href$='.jpeg'],.featured-item a[href$='.jpeg'],.featured-item a[href$='.gif'],.featured-item a[href$='.jpg'], .page-featured-item .slider a[href$='.jpg'], .page-featured-item a[href$='.jpg'],.page-featured-item .slider a[href$='.jpeg'], .page-featured-item a[href$='.jpeg'], .gallery a[href$='.png'], .gallery a[href$='.jpeg'], .gallery a[href$='.gif']").parent().magnificPopup({
     delegate: 'a',
     type: 'image',
-    tLoading: '<div class="loading dark"><i></i><i></i><i></i><i></i></div>',
-    mainClass: 'my-mfp-zoom-in',
+    tLoading: '<div class="ux-loading dark"><i></i><i></i><i></i><i></i></div>',
+    removalDelay: 300,
     gallery: {
       enabled: true,
       navigateByImgClick: true,
@@ -208,36 +175,32 @@ jRes.addFunc({
     }
   }); 
 
- 
 
- /* Youtube and Vimeo links */
+  /* Youtube and Vimeo links */
   $("a.button[href*='vimeo'],a.button[href*='youtube']").magnificPopup({
     disableOn: 700,
     type: 'iframe',
-    mainClass: 'my-mfp-zoom-in my-mfp-video',
-    removalDelay: 160,
+    mainClass: 'my-mfp-video',
+    removalDelay: 300,
     preloader: false,
-  
   }); 
-
- 
 
 
 /* ****** PRODUCT QUICK VIEW  ******/
 $('.quick-view,.open-quickview').click(function(e){
    /* add loader  */
-   $(this).after('<div class="loading dark"><i></i><i></i><i></i><i></i></div>');
+   $(this).after('<div class="ux-loading dark"><i></i><i></i><i></i><i></i></div>');
    var product_id = $(this).attr('data-prod');
    var data = { action: 'jck_quickview', product: product_id};
     $.post(ajaxURL.ajaxurl, data, function(response) {
      $.magnificPopup.open({
-        mainClass: 'my-mfp-zoom-in',
+        removalDelay: 300,
         items: {
           src: '<div class="product-lightbox">'+response+'</div>',
           type: 'inline'
         }
       });
-     $('.loading,.color-overlay').remove();
+     $('.ux-loading,.color-overlay').remove();
 
      setTimeout(function() {
 
@@ -276,6 +239,13 @@ $('.quick-view,.open-quickview').click(function(e){
     e.preventDefault();
 }); // product lightbox
 
+
+// Activate product Zoom for non-touch
+if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+    $('.product-zoom .easyzoom').easyZoom({
+      loadingNotice: ''
+    });
+}
 
 /* Disable animate for touch devices */
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
@@ -325,7 +295,7 @@ $('#main-content').waypoint(function() {
    $('body.has-dark-header:not(.org-dark-header)').toggleClass('dark-header');
    $('.header-wrapper').toggleClass('before-sticky');
    $('.sticky_header #masthead, .wide-nav').toggleClass('move_down');
-},{offset: header_offset});
+},{offset: '-200px'});
 
 /********* SCROLL TO LINKS **********/
 /* top link */
@@ -339,7 +309,7 @@ $('#top-link').click(function(e) {
 $('.scroll-to-reviews').click(function(e){
     $('.product-details .tabs-nav li').removeClass('current-menu-item');
     $('.product-details .tabs-nav').find('a[href=#panelreviews]').parent().addClass('current-menu-item');
-    $('.tabs li, .tabs-inner,.panel.entry-content').removeClass('active');
+    $('.tabs li, .tabs-inner,.panel.entry-content').removeClass('active');
     $('.tabs li.reviews_tab, #panelreviews, #tab-reviews').addClass('active');
     $('.panel.entry-content').css('display','none');
     $('#tab-reviews').css('display','block');
@@ -349,17 +319,6 @@ $('.scroll-to-reviews').click(function(e){
     e.preventDefault();
 });
 
-
-/****** WIDGET EFFECTS *******/
-
-$('.widget_nav_menu .menu-parent-item').hoverIntent(
-    function () {
-        $(this).find('ul').slideDown();
-    },
-    function () {
-       $(this).find('ul').slideUp();
-    }
-);
 
 
 /****** ACCORDIAN / TABS *******/
@@ -438,8 +397,10 @@ if(! /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
       $(this).find('a.add_to_wishlist').attr('title',tip_message).addClass('tip-top');
   });
 
+  $('.chosen a').tooltipster({delay: 50, contentAsHTML: true,touchDevices: false});
   $('.tip-left').tooltipster({position: 'left', delay: 50, contentAsHTML: true,touchDevices: false});
   $('.tip, .tip-top,.tip-bottom').tooltipster({delay: 50, contentAsHTML: true,touchDevices: false});
+
 }
 
 
@@ -468,12 +429,8 @@ $( window ).resize(function() {
   $('.ux_banner.full-height').height($( window ).height());
 });
 
-$('.col_hover_focus').hover(function(){
-  $(this).parent().find('.columns > *').css('opacity','0.5');
-}, function() {
-  $(this).parent().find('.columns > *').css('opacity','1');
-});
 
+/* slider fix */
 $('.slider .add_to_cart_button').hover(
   function() {
     $('.sliderControlls').css('pointer-events','none');
@@ -483,23 +440,21 @@ $('.slider .add_to_cart_button').hover(
 );
 
 
-// add to cart in grid
-$('.add-to-cart-grid.product_type_simple').click(function(){
-  jQuery('.mini-cart').addClass('active cart-active');
-  jQuery('.mini-cart').hover(function(){jQuery('.cart-active').removeClass('cart-active');});
-  setTimeout(function(){jQuery('.cart-active').removeClass('active');}, 5000);
+/* Ajax add to cart */
+$('body').on('added_to_cart', function(){
+    jQuery('.mini-cart').addClass('active cart-active');
+    jQuery('.mini-cart').hover(function(){jQuery('.cart-active').removeClass('cart-active');});
+    setTimeout(function(){jQuery('.cart-active').removeClass('active');}, 5000);
 });
+
 
 
 //  hacks
 $('.ux_banner [class^="text-box-"], .ux_banner [class^="text-border"]').after('<div class="clearfix"/>');
 $('.ux_banner .inner-wrap p > br, .accordion > br, #content > br, .ux-section-content > br, .social-icons > br').remove();
 
-// Meage menu fix
+// Mega menu fix
 $('#megaMenu').wrap('<li/>');
-
-// Add custom select wrappers
-$('select.ninja-forms-field,select.addon-select,.widget_layered_nav select').wrap('<div class="custom select-wrapper"/>');
 
 
 $(window).resize();

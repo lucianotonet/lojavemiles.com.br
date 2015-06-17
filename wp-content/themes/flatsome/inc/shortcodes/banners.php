@@ -14,6 +14,7 @@ function uxbannerShortcode( $atts, $content = null ){
     'mob_height' => '',
     'tablet_height' => '',
     'animation' => 'fadeIn',
+    'mob_hide' => '',
     'animate' => '',
     'animated' => '',
     'animation_duration' => '',
@@ -51,7 +52,8 @@ function uxbannerShortcode( $atts, $content = null ){
 
    $start_link = "";
    $end_link = "";
-   if($link) {$start_link = '<a href="'.$link.'">'; $end_link = '</a>';};
+   if($target) $target = 'target="'.$target.'"';
+   if($link) {$start_link = '<a href="'.$link.'" '.$target.'>'; $end_link = '</a>';};
 
    if($bg_color) $bg_color = ' background-color:'.$bg_color;
 
@@ -73,25 +75,34 @@ function uxbannerShortcode( $atts, $content = null ){
 
    $parallax_velocity = '0.'.$parallax;
     
+   $has_parallax = '';
+   if($parallax || $parallax_text) $has_parallax = 'has-parallax';
+
    $parallax_class = '';
    if($parallax){$parallax_class = ' ux_parallax'; $parallax='data-velocity="0.'.$parallax.'"';} 
  
    $text_parallax_class = '';
-   if($parallax_text){$text_parallax_class = ' parallax_text'; $parallax_text='data-velocity="0.'.$parallax_text.'"';} 
-  
+   if($parallax_text){$text_parallax_class = ' parallax_text'; $parallax_text='data-velocity="0.'.$parallax_text.'"';}
+
+   // Background overlay;
+   $background_overlay = '';
+   if(strpos($bg_overlay,'#') !== false){
+      $background_overlay = ux_hex2rgba($bg_overlay,'0.15');
+   } else{
+      $background_overlay = $bg_overlay;
+   }
 
   ?>
-   <div id="banner_<?php echo $bannerid; ?>" class="ux_banner <?php echo $color; ?> <?php echo $class; ?> <?php if($height == '100%') echo 'full-height'; ?> <?php echo $hover; ?> <?php if(!$bg && !$bg_color){ ?>bg-trans<?php } ?>"  style="height:<?php echo $height; ?>; <?php echo $bg_color; ?>" data-height="<?php echo $height; ?>" role="banner">
+   <div id="banner_<?php echo $bannerid; ?>" class="ux_banner <?php echo $color; ?> <?php echo  $has_parallax; ?> <?php echo $class; ?> <?php if($height == '100%') echo 'full-height'; ?> <?php echo $hover; ?> <?php if(!$bg && !$bg_color){ ?>bg-trans<?php } ?>"  style="height:<?php echo $height; ?>; <?php echo $bg_color; ?>" data-height="<?php echo $height; ?>" role="banner">
       <?php echo $start_link; ?>
         <?php if($youtube) { ?>
           <div id="ytplayer" class="ux-youtube <?php echo $parallax_class; ?>"></div>
         <?php } ?>
       <?php if($bg || $bg_color){ ?>
-       <?php if($bg_overlay) echo '<div class="bg-overlay" style="background-color:'.ux_hex2rgba($bg_overlay,'0.15').'"></div>'; ?>
-       <div class="banner-bg<?php echo $parallax_class; ?>" <?php if($parallax) echo $parallax; ?> style="background-image:url('<?php echo $background; ?>'); <?php echo $bg_color; ?>"><?php if($background) { ?><img src="<?php echo $background; ?>"  style="visibility:hidden;" /><?php } ?></div>
+       <?php if($bg_overlay) echo '<div class="bg-overlay" style="background-color:'.$background_overlay.'"></div>'; ?>
+       <div class="banner-bg<?php echo $parallax_class; ?>" <?php if($parallax) echo $parallax; ?> style="background-image:url('<?php echo $background; ?>'); <?php echo $bg_color; ?>"><?php if($background) { ?><img src="<?php echo $background; ?>"  alt="banner-bg" style="visibility:hidden;" /><?php } ?></div>
        <?php } ?>
        <?php if($video_mp4 || $video_webm || $video_ogg){ ?>
-       <div class="video-overlay"></div>
        <video class="ux-banner-video hide-for-small" <?php if($parallax) echo $parallax; ?> poster="<?php echo $background; ?>" preload="auto" autoplay="" loop="<?php echo $video_loop; ?>" <?php if($video_sound == 'false') echo "muted='muted'"; ?>>
             <source src="<?php echo $video_mp4; ?>" type="video/mp4">
             <source src="<?php echo $video_webm; ?>" type="video/webm">
@@ -119,34 +130,34 @@ function uxbannerShortcode( $atts, $content = null ){
        <?php } // End animation duration ?>
        </style>
        <?php } ?>
+       <?php if($youtube) { ?>
+        <!-- Youtube script -->
+        <script>
+          // Load the IFrame Player API code asynchronously.
+          var tag = document.createElement('script');
+          tag.src = "https://www.youtube.com/player_api";
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+          // Replace the 'ytplayer' element with an <iframe> and
+          // YouTube player after the API code downloads.
+          var player;
+          function onYouTubePlayerAPIReady() {
+            player = new YT.Player('ytplayer', {
+              height: '100%',
+              width: '100%',
+              playerVars: { autoplay: 1, controls: 0, showinfo: 0, fs :0, loop:1, el: 0},
+              videoId: '<?php echo $youtube; ?>',
+              events: {
+                'onReady': onPlayerReady}
+              }
+            );
+          }
+          function onPlayerReady(event) {
+              <?php if($video_sound == 'false') echo 'event.target.mute();'; ?>
+          }
+        </script>
+        <?php } ?>
 </div><!-- end .ux_banner -->
-<?php if($youtube) { ?>
-<!-- Youtube script -->
-<script>
-  // Load the IFrame Player API code asynchronously.
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/player_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  // Replace the 'ytplayer' element with an <iframe> and
-  // YouTube player after the API code downloads.
-  var player;
-  function onYouTubePlayerAPIReady() {
-    player = new YT.Player('ytplayer', {
-      height: '100%',
-      width: '100%',
-      playerVars: { autoplay: 1, controls: 0, showinfo: 0, fs :0, loop:1, el: 0},
-      videoId: '<?php echo $youtube; ?>',
-      events: {
-        'onReady': onPlayerReady}
-      }
-    );
-  }
-  function onPlayerReady(event) {
-      <?php if($video_sound == 'false') echo 'event.target.mute();'; ?>
-  }
-</script>
-<?php } ?>
 <?php 
 
   $content = ob_get_contents();

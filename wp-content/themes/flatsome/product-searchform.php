@@ -7,8 +7,8 @@
 ?>
 
 
- <?php if ( in_array( 'yith-woocommerce-ajax-search/init.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) { ?>
-             <?php  do_shortcode('[yith_woocommerce_ajax_search]'); ?>
+ <?php if ( shortcode_exists('yith_woocommerce_ajax_search') ) { ?>
+         <?php echo do_shortcode('[yith_woocommerce_ajax_search]'); ?>
  <?php } else { ?>
 <div class="row collapse search-wrapper">
 	<form method="get" id="searchform" class="searchform" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">

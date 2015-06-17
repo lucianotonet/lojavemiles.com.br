@@ -128,6 +128,7 @@ else if($flatsome_opt['related_products'] == 'grid'){ ?>
                 </ul>   <!-- .slider -->  
 <?php } else { } ?>
 
+
 <?php endif;
 
 wp_reset_postdata();

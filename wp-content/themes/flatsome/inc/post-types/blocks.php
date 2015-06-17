@@ -38,12 +38,12 @@ function my_edit_blocks_columns( $columns ) {
 	$columns = array(
 		'cb' => '<input type="checkbox" />',
 
-		'title' => __( 'Title' ),
-         'quick_preview' => __( 'Preview' ),
+		'title' => __( 'Title' , 'blocks'),
+         'quick_preview' => __( 'Preview' , 'blocks'),
 
-		'shortcode' => __( 'Shortcode' ),
+		'shortcode' => __( 'Shortcode' , 'blocks'),
    
-		'date' => __( 'Date' ),
+		'date' => __( 'Date' , 'blocks'),
 	);
 
 	return $columns;
@@ -120,18 +120,12 @@ function block_shortcode($atts, $content = null) {
     global $wpdb,$post;
     $post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_name = '$id'");
     $permalink =  get_permalink($post_id);
-   /* if(isset($_GET['block_editor'])){
-        if($post_id){
-         $html = '<iframe src="'.$permalink.'?edit_block" style="border:0;width:100%;height:200px;"></iframe>';
-        } else{
-            $html = '<p><mark>UX Block <b>"'.$id.'"</b> not found! Wrong ID?</mark></p>';   
-        }
-    } else{ */
+  
         if($post_id){
         $html = get_post_field('post_content', $post_id);
 
         // add edit link for admins
-        if (current_user_can('edit_posts')) {
+        if (current_user_can('edit_pages')) {
            $edit_link = get_edit_post_link( $post_id ); 
            $html = '<div id="block-'.$id.'" class="ux_block"><a class="edit-link" href="'.$edit_link.'&preview_url='.$post->ID.'">Edit Block</a>'.$html.'</div>';
         }

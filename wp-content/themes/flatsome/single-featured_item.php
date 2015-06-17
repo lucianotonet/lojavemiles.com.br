@@ -47,13 +47,18 @@ get_header(); ?>
 <?php 
 // RELATED SLIDER
 global $flatsome_opt;
-$cat = get_the_terms( get_the_ID(), 'featured_item_category', '', ', ', '' );
+$get_cat = get_the_terms( get_the_ID(), 'featured_item_category', '', ', ', '' );
+
+$category = '';
+if($get_cat) $category = current($get_cat)->slug;
 
 if(!isset($flatsome_opt['featured_items_related']) || $flatsome_opt['featured_items_related'] == 'default') {
-	echo do_shortcode('[featured_items_slider style="1" height="'.$flatsome_opt['featured_items_related_height'].'" cat="'.current($cat)->slug.'"]');
+echo do_shortcode('[featured_items_slider style="1" items="999" height="'.$flatsome_opt['featured_items_related_height'].'" cat="'.$category.'"]');
 } else if($flatsome_opt['featured_items_related'] == 'text_overlay') {
-	echo do_shortcode('[featured_items_slider style="2" height="'.$flatsome_opt['featured_items_related_height'].'" cat="'.current($cat)->slug.'"]');
+	echo do_shortcode('[featured_items_slider items="999" style="2" height="'.$flatsome_opt['featured_items_related_height'].'" cat="'.$category.'"]');
 }
+
+
 ?>
 
 <?php get_footer(); ?>

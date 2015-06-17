@@ -28,16 +28,16 @@ function product_lookbook($atts, $content = null) {
 		});
 
 		function slideLoad(args) {
-			setTimeout(function() {
-				 var slider_height = $(args.sliderContainerObject).find('img:first').height();
-		         $(args.sliderContainerObject).css('min-height',slider_height);
-			  }, 0);
+			 imagesLoaded( '#slider_<?php echo $sliderrandomid ?>', function() {
+			  	 var slider_height = $(args.sliderContainerObject).find('img:first').height();
+		         $(args.sliderContainerObject).css('min-height',slider_height);	
+			 }); // images loaded 
     	 }
 	    
 	});
 	</script> 
 	
-            <div id="slider_<?php echo $sliderrandomid ?>" class="iosSlider lookbook-slider" style="height:500px;overflow:hidden;">
+            <div id="slider_<?php echo $sliderrandomid ?>" class="iosSlider lookbook-slider" style="height:300px;overflow:hidden;">
                 <ul class="slider large-block-grid-3 small-block-grid-1">
 				  <?php
                     $args = array(

@@ -11,13 +11,11 @@ global $flatsome_opt;
 
 </div><!-- #main-content -->
 
-
 <footer class="footer-wrapper" role="contentinfo">	
 <?php if(isset($flatsome_opt['html_before_footer'])){
 	// BEFORE FOOTER HTML BLOCK
 	echo do_shortcode($flatsome_opt['html_before_footer']);
 } ?>
-
 
 <!-- FOOTER 1 -->
 <?php if ( is_active_sidebar( 'sidebar-footer-1' ) ) : ?>
@@ -39,12 +37,10 @@ global $flatsome_opt;
 </div><!-- end footer 2 -->
 <?php endif; ?>
 
-
 <?php if(isset($flatsome_opt['html_after_footer'])){
 	// AFTER FOOTER HTML BLOCK
 	echo do_shortcode($flatsome_opt['html_after_footer']);
 } ?>
-
 
 <div class="absolute-footer <?php echo $flatsome_opt['footer_bottom_style']; ?>" style="background-color:<?php echo $flatsome_opt['footer_bottom_color']; ?>">
 <div class="row">
@@ -60,7 +56,7 @@ global $flatsome_opt;
 						));
 				?>						
 			<?php endif; ?>
-		<div class="copyright-footer"><?php if(isset($flatsome_opt['footer_left_text'])) {echo $flatsome_opt['footer_left_text'];} else{ echo 'Define left footer text / navigation in Theme Option Panel';} ?></div>
+		<div class="copyright-footer"><?php if(isset($flatsome_opt['footer_left_text'])) {echo do_shortcode($flatsome_opt['footer_left_text']);} else{ echo 'Define left footer text / navigation in Theme Option Panel';} ?></div>
 		</div><!-- .left -->
 		<div class="right">
 				<?php if(isset($flatsome_opt['footer_right_text'])){ echo do_shortcode($flatsome_opt['footer_right_text']);} else {echo 'Define right footer text in Theme Option Panel';} ?>
@@ -79,7 +75,6 @@ global $flatsome_opt;
 	echo $flatsome_opt['html_scripts_footer'];
 } ?>
 
-<div class="mob-helper"></div>
 <?php wp_footer(); ?>
 
 </body>

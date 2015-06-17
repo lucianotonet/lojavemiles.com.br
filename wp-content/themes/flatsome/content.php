@@ -23,7 +23,7 @@ if(!isset($flatsome_opt['blog_style']) || $flatsome_opt['blog_style'] == 'blog-n
 	<?php if ( has_post_thumbnail() ) { // check if the post has a Post Thumbnail assigned to it. ?>
         	<div class="entry-image">
 	        	<a href="<?php the_permalink();?>">
-		        	<?php if($flatsome_opt['blog_parallax']) { ?><div class="parallax_img" style="overflow:hidden"><div class="parallax_img_inner" data-velocity="0.15"><?php } ?>
+		        	<?php if($flatsome_opt['blog_parallax']) { ?><div class="parallax_img has-parallax" style="overflow:hidden"><div class="parallax_img_inner" data-velocity="0.15"><?php } ?>
 		            	<?php the_post_thumbnail('large'); ?>
 		      		<?php if($flatsome_opt['blog_parallax']) { ?></div></div><?php } ?>
 	        	</a>

@@ -1,6 +1,6 @@
 <?php
 /*
-Template name: Full Width (100%) - Transparent header - Light text
+Template name: Full Width  - Transparent header - Light text
 */
 get_header(); ?>
 <?php if( has_excerpt() ) { ?>

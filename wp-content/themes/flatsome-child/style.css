@@ -5,10 +5,15 @@ Description: This is a child theme for Flatsome
 Author: UX Themes
 Author URI: http: //www.uxthemes.com/
 Template: flatsome
-Version: 2.0
+Version: 2.5
 */
 
-@import url("../flatsome/css/foundation.css");
+/*************** ADD CUSTOM CSS HERE.   ***************/
 
-/*************** ADD YOUR CUSTOM CSS IN THIS AREA ***************/
 
+
+@media only screen and (max-width: 48em) {
+/*************** ADD MOBILE ONLY CSS HERE  ***************/
+
+
+}

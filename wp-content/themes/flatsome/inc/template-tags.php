@@ -11,6 +11,10 @@
 //  - Blog - Add "Read more" links
 //  - Product Quick View
 //  - Catalog Mode
+//  - Mobile menu
+//  - Continue Shopping
+//  - Add product description in grid
+//  - Add grid button if enabled
 
 global $flatsome_opt;
 
@@ -244,7 +248,7 @@ function flatsome_add_to_cart_dropdown( $fragments ) {
 	<div class="cart-inner">
 	<a href="<?php echo esc_url( $woocommerce->cart->get_cart_url() ); ?>" class="cart-link">
                     <strong class="cart-name hide-for-small"><?php _e('Cart', 'woocommerce'); ?></strong> 
-					<span class="cart-price hide-for-small">/ <?php echo $woocommerce->cart->get_cart_total(); ?></span> 
+					<span class="cart-price hide-for-small">/ <?php echo $woocommerce->cart->get_cart_subtotal(); ?></span> 
                         
 					<!-- cart icon -->
 					<div class="cart-icon">
@@ -261,8 +265,8 @@ function flatsome_add_to_cart_dropdown( $fragments ) {
 					</div><!-- end cart icon -->
 
 					</a>
-							<div class="nav-dropdown">
-                                <div class="nav-dropdown-inner">
+							<div  class="nav-dropdown">
+                                <div id="mini-cart-content" class="nav-dropdown-inner">
                                 <div class="cart_list">
                                 <?php                                    
                                     if (sizeof($woocommerce->cart->cart_contents)>0) : foreach ($woocommerce->cart->cart_contents as $cart_item_key => $cart_item) :
@@ -276,8 +280,8 @@ function flatsome_add_to_cart_dropdown( $fragments ) {
                                       		<div class="small-7 large-7 columns"><?php 
                                       			 $product_title = $_product->get_title();
                                                  echo '<a class="cart_list_product_title" href="'.get_permalink($cart_item['product_id']).'">' . apply_filters('woocommerce_cart_widget_product_title', $product_title, $_product) . '</a>';
-                                                 echo '<div class="cart_list_product_price">'.woocommerce_price($_product->get_price()).' /</div>';
-                                                 echo '<div class="cart_list_product_quantity">'.__('Quantity', 'woocommerce').': '.$cart_item['quantity'].'</div>';
+                                                 echo '<div class="cart_list_product_price">'.woocommerce_price($_product->get_price()).'</div>';
+                                                 echo '<div class="cart_list_product_quantity"> / '.__('Quantity', 'woocommerce').': '.$cart_item['quantity'].'</div>';
 
                                       		?></div>
                                       		<div class="small-3 large-3 columns">
@@ -293,7 +297,7 @@ function flatsome_add_to_cart_dropdown( $fragments ) {
                                 </div><!-- Cart list -->
                                             
                                     <div class="minicart_total_checkout">                                        
-                                        <?php _e('Cart Subtotal', 'woocommerce'); ?><span><?php echo $woocommerce->cart->get_cart_subtotal(  ); ?></span>                                   
+                                        <?php _e('Subtotal', 'woocommerce'); ?><span><?php echo $woocommerce->cart->get_cart_subtotal(  ); ?></span>                                   
                                     </div>
                                     
                                     <a href="<?php echo esc_url( $woocommerce->cart->get_cart_url() ); ?>" class="button expand uppercase"><?php _e('View Cart', 'woocommerce'); ?></a>   
@@ -349,126 +353,35 @@ function flatsome_add_to_cart_dropdown( $fragments ) {
 add_action('woocommerce_single_product_summary','ProductShowReviews', 15);
             
 
-
-
-
 /* NAXT / PREV NAV ON PRODUCT PAGES */
-function next_post_link_product($format='%link &raquo;', $link='%title', $in_same_cat = false, $excluded_categories = '') {
-    adjacent_post_link_product($format, $link, $in_same_cat, $excluded_categories, false);
+function next_post_link_product() {
+   global $post;
+   $next_post = get_next_post();
+    if ( is_a( $next_post , 'WP_Post' ) ) { ?>
+       <div class="prod-dropdown">
+                <a href="<?php echo get_the_permalink( $next_post->ID ); ?>" rel="next" class="icon-angle-left next"></a>
+                <div class="nav-dropdown" style="display: none;">
+                  <a title="<?php echo get_the_title( $next_post->ID ); ?>" href="<?php echo get_the_permalink( $next_post->ID ); ?>">
+                  <?php echo get_the_post_thumbnail($next_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
+
+                </div>
+            </div>
+    <?php }
 }
 
-function previous_post_link_product($format='&laquo; %link', $link='%title', $in_same_cat = false, $excluded_categories = '') {
-    adjacent_post_link_product($format, $link, $in_same_cat, $excluded_categories, true);
+function previous_post_link_product() {
+      global $post;
+   $prev_post = get_previous_post();
+    if ( is_a( $prev_post , 'WP_Post' ) ) { ?>
+       <div class="prod-dropdown">
+                <a href="<?php echo get_the_permalink( $prev_post->ID ); ?>" rel="next" class="icon-angle-right prev"></a>
+                <div class="nav-dropdown" style="display: none;">
+                    <a title="<?php echo get_the_title( $prev_post->ID ); ?>" href="<?php echo get_the_permalink( $prev_post->ID ); ?>">
+                    <?php echo get_the_post_thumbnail($prev_post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' )) ?></a>
+                </div>
+            </div>
+    <?php }
 }
-
-function adjacent_post_link_product( $format, $link, $in_same_cat = false, $excluded_categories = '', $previous = true ) {
-    if ( $previous && is_attachment() )
-        $post = get_post( get_post()->post_parent );
-    else
-        $post = get_adjacent_post_product( $in_same_cat, $excluded_categories, $previous );
-
-    if ( ! $post ) {
-        $output = '';
-    } else {
-        $title = $post->post_title;
-
-        if ( empty( $post->post_title ) )
-            $title = $previous ? __( 'Previous Post' ) : __( 'Next Post' );
-
-        $title = apply_filters( 'the_title', $title, $post->ID );
-
-        $feat_image = wp_get_attachment_url(get_post_thumbnail_id($post->ID) );
-
-        $image = 
-        $date = mysql2date( get_option( 'date_format' ), $post->post_date );
-        $rel = $previous ? 'prev' : 'next';
-
-        $string = '<div class="prod-dropdown"><a href="' . get_permalink( $post ) . '" rel="'.$rel.'" class="';
-        $inlink = str_replace( '%title', $title, $link );
-        $inlink = $string . $inlink . '"></a><div class="nav-dropdown"><a href="' . get_permalink( $post ) . '">'.get_the_post_thumbnail( $post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' ) ).'</a></div></div>';
-        $output = str_replace( '%link', $inlink, $format );
-    }
-
-    $adjacent = $previous ? 'previous' : 'next';
-
-    echo apply_filters( "{$adjacent}_post_link", $output, $format, $link, $post );
-}
-
-function get_adjacent_post_product( $in_same_cat = false, $excluded_categories = '', $previous = true ) {
-    global $wpdb;
-
-    if ( ! $post = get_post() )
-        return null;
-
-    $current_post_date = $post->post_date;
-    $join = '';
-    $posts_in_ex_cats_sql = '';
-    if ( $in_same_cat || ! empty( $excluded_categories ) ) {
-        $join = " INNER JOIN $wpdb->term_relationships AS tr ON p.ID = tr.object_id INNER JOIN $wpdb->term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id";
-
-        if ( $in_same_cat ) {
-            if ( ! is_object_in_taxonomy( $post->post_type, 'product_cat' ) )
-                return '';
-            $cat_array = wp_get_object_terms($post->ID, 'product_cat', array('fields' => 'ids'));
-            if ( ! $cat_array || is_wp_error( $cat_array ) )
-                return '';
-            $join .= " AND tt.taxonomy = 'product_cat' AND tt.term_id IN (" . implode(',', $cat_array) . ")";
-        }
-
-        $posts_in_ex_cats_sql = "AND tt.taxonomy = 'product_cat'";
-        if ( ! empty( $excluded_categories ) ) {
-            if ( ! is_array( $excluded_categories ) ) {
-                // back-compat, $excluded_categories used to be IDs separated by " and "
-                if ( strpos( $excluded_categories, ' and ' ) !== false ) {
-                    _deprecated_argument( __FUNCTION__, '3.3', sprintf( __( 'Use commas instead of %s to separate excluded categories.' ), "'and'" ) );
-                    $excluded_categories = explode( ' and ', $excluded_categories );
-                } else {
-                    $excluded_categories = explode( ',', $excluded_categories );
-                }
-            }
-
-            $excluded_categories = array_map( 'intval', $excluded_categories );
-
-            if ( ! empty( $cat_array ) ) {
-                $excluded_categories = array_diff($excluded_categories, $cat_array);
-                $posts_in_ex_cats_sql = '';
-            }
-
-            if ( !empty($excluded_categories) ) {
-                $posts_in_ex_cats_sql = " AND tt.taxonomy = 'product_cat' AND tt.term_id NOT IN (" . implode($excluded_categories, ',') . ')';
-            }
-        }
-    }
-
-    $adjacent = $previous ? 'previous' : 'next';
-    $op = $previous ? '<' : '>';
-    $order = $previous ? 'DESC' : 'ASC';
-
-    $join  = apply_filters( "get_{$adjacent}_post_join", $join, $in_same_cat, $excluded_categories );
-    $where = apply_filters( "get_{$adjacent}_post_where", $wpdb->prepare("WHERE p.post_date $op %s AND p.post_type = %s AND p.post_status = 'publish' $posts_in_ex_cats_sql", $current_post_date, $post->post_type), $in_same_cat, $excluded_categories );
-    $sort  = apply_filters( "get_{$adjacent}_post_sort", "ORDER BY p.post_date $order LIMIT 1" );
-
-    $query = "SELECT p.id FROM $wpdb->posts AS p $join $where $sort";
-    $query_key = 'adjacent_post_' . md5($query);
-    $result = wp_cache_get($query_key, 'counts');
-    if ( false !== $result ) {
-        if ( $result )
-            $result = get_post( $result );
-        return $result;
-    }
-
-    $result = $wpdb->get_var( $query );
-    if ( null === $result )
-        $result = '';
-
-    wp_cache_set($query_key, $result, 'counts');
-
-    if ( $result )
-        $result = get_post( $result );
-
-    return $result;
-}
-
 
 
 /* BLOG - Add class to read more on blogs */
@@ -503,6 +416,20 @@ function jck_quickview() {
     die();
 }
 
+
+/* SHOW PRODUCTS IN STOCK */
+if(isset($flatsome_opt['show_in_stock'])){
+    if($flatsome_opt['show_in_stock']){
+    // Hook in
+    add_filter( 'woocommerce_get_availability', 'custom_override_get_availability', 1, 2);
+
+    // Our hooked in function $availablity is passed via the filter!
+    function custom_override_get_availability( $availability, $_product ) {
+        if ( $_product->is_in_stock() ) $availability['availability'] = __('In Stock', 'woocommerce');
+        return $availability;
+    }
+    }
+}
 
 
 /* PRODUCT QUICK VIEW HOOKS */
@@ -548,11 +475,17 @@ if(isset($_GET["catalog-mode"]) || $flatsome_opt['catalog_mode']){
 /**
  * Edit $wp_query before it is being run.
  */
+
 function flatsome_pre_get_posts_action( $query ) {
     global $flatsome_opt;
+
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     // Stop if searching from admin
     if($action == 'woocommerce_json_search_products') {
+        return;
+    }
+
+    if($action == 'woocommerce_json_search_products_and_variations') {
         return;
     }
     // Include posts and pages in ajax search.
@@ -561,22 +494,187 @@ function flatsome_pre_get_posts_action( $query ) {
         $query->query_vars['meta_query'] = new WP_Meta_Query( array( 'relation' => 'OR', $query->query_vars['meta_query'] ) );
     }
 }
+
 add_action('pre_get_posts', 'flatsome_pre_get_posts_action');
 
 
-/**
- * Edit $wp_query results.
- */
-function flatsome_posts_results_filter( $posts, $query ) {
-    global $flatsome_opt;
-    // Exclude WooCommerce pages in ajax search.
-    if (defined('DOING_AJAX') && DOING_AJAX && !empty($query->query_vars['s']) && $flatsome_opt['search_result']) {
-        foreach ($posts as $key => $post) {
-            foreach (array('myaccount', 'edit_address', 'change_password', 'lost_password', 'shop', 'cart', 'checkout', 'pay', 'view_order', 'thanks', 'terms') as $wc_page_type) {
-                if( $post->ID == woocommerce_get_page_id($wc_page_type) ) unset($posts[$key]);
-            }
+
+/* Mobile menu */
+function flatsome_mobile_menu(){ 
+ global $flatsome_opt, $woocommerce; ?>
+
+<!-- Mobile Popup -->
+<div id="jPanelMenu" class="mfp-hide">
+    <div class="mobile-sidebar">
+        <?php if($flatsome_opt['catalog_mode']) { ?>
+        <ul class="html-blocks">
+            <li class="html-block">
+                 <?php echo do_shortcode($flatsome_opt['catalog_mode_header']); ?>
+            </li>
+        </ul>
+        <?php } ?>
+
+        <ul class="mobile-main-menu">
+        <?php if ($flatsome_opt['search_pos'] !== 'hide') { ?>
+        <li class="search">
+            <?php if(function_exists('get_product_search_form')) {
+                get_product_search_form();
+            } else {
+                get_search_form();
+            } ?>    
+        </li><!-- .search-dropdown -->
+        <?php } ?>
+
+        <?php 
+        if ( has_nav_menu( 'primary_mobile' ) ) { 
+        // Load custom mobile menu if set
+            wp_nav_menu(array(
+                'theme_location' => 'primary_mobile',
+                'container'       => false,
+                'items_wrap'      => '%3$s',
+                'depth'           => 0,
+            ));
+
+        } else {
+        // Load default menu
+            wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'container'       => false,
+            'items_wrap'      => '%3$s',
+            'depth'           => 0,
+           ));
+
         }
-    }
-    return $posts;
+        ?>
+
+        <?php if(ux_is_woocommerce_active() && $flatsome_opt['myaccount_dropdown']) { ?>
+
+        <li class="menu-item menu-account-item menu-item-has-children">
+            <?php
+            if ( is_user_logged_in() ) { ?> 
+                <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">
+                    <?php _e('My Account', 'woocommerce'); ?>
+                </a>
+                <ul class="sub-menu">
+                <?php if ( has_nav_menu( 'my_account' ) ) : ?>
+                <?php  
+                wp_nav_menu(array(
+                    'theme_location' => 'my_account',
+                    'container'       => false,
+                    'items_wrap'      => '%3$s',
+                    'depth'           => 0,
+                ));
+                ?>
+                <?php else: ?>
+                    <li>Define your My Account dropdown menu in <b>Apperance > Menus</b></li>
+                <?php endif; ?> 
+                </ul>
+
+            <?php } else { ?>
+            <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>"><?php _e('Login', 'woocommerce'); ?></a>
+            <?php } ?>                      
+        </li>
+        <?php } // end My account dropdown ?>
+        </ul>
+
+        <?php if($flatsome_opt['topbar_show']) { ?>
+        <ul class="top-bar-mob">
+             <?php if ( has_nav_menu( 'top_bar_nav' ) ) : ?>
+            <?php  
+                wp_nav_menu(array(
+                    'theme_location' => 'top_bar_nav',
+                    'menu_class' => 'top-bar-mob',
+                    'container'       => false,
+                    'items_wrap'      => '%3$s',
+                    'depth' => 2,
+                ));
+            ?>
+            <?php endif; ?>
+
+             <?php if($flatsome_opt['top_right_text']) { ?>
+            <li class="html-block">
+                <?php echo do_shortcode($flatsome_opt['top_right_text']); ?>
+            </li>
+            <?php } ?>
+
+            <?php if($flatsome_opt['topbar_right']) { ?>
+            <li class="html-block">
+               <?php echo do_shortcode($flatsome_opt['topbar_right']); ?>
+            </li>
+            <?php } ?>
+
+        </ul>
+        <?php } // end top bar ?>
+
+       <?php if($flatsome_opt['nav_position'] == 'bottom') { ?>
+        <ul class="html-blocks">
+            <li class="html-block">
+                <?php echo do_shortcode($flatsome_opt['nav_position_text']); ?>
+            </li>
+            <li class="html-block">
+                <?php echo do_shortcode($flatsome_opt['nav_position_text_top']); ?>
+            </li>
+        </ul>
+        <?php } ?>
+
+        <?php if($flatsome_opt['nav_position'] == 'bottom_center') { ?>
+        <ul class="html-blocks">
+            <li class="html-block">
+                 <?php echo do_shortcode($flatsome_opt['nav_position_text_top']); ?>
+            </li>
+        </ul>
+        <?php } ?>
+
+
+
+           
+    </div><!-- inner -->
+</div><!-- #mobile-menu -->
+
+<?php
 }
-add_filter( 'posts_results', 'flatsome_posts_results_filter', 10, 2 );
+
+add_action('wp_footer', 'flatsome_mobile_menu');
+
+
+
+// Continue Shopping button
+if(isset($flatsome_opt['continue_shopping']) && $flatsome_opt['continue_shopping']){
+    function flatsome_continue_shopping(){
+     ?> 
+     <a class="button-continue-shopping button alt-button small"  href="<?php echo wc_get_page_permalink( 'shop' ); ?>">
+        &#8592; <?php echo __( 'Continue Shopping', 'woocommerce' ) ?></a> 
+     <?php
+    }
+
+    add_action('woocommerce_after_cart_contents', 'flatsome_continue_shopping', 0);
+    add_action('woocommerce_thankyou', 'flatsome_continue_shopping');
+}
+
+
+/* Show short description in grid */
+if(ux_is_woocommerce_active()){
+    if($flatsome_opt['category_row_count'] == '1' || is_shop()){
+       add_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_single_excerpt', 30);
+    } else if($flatsome_opt['short_description_in_grid']) {
+       add_action('woocommerce_after_shop_loop_item_title', 'woocommerce_template_single_excerpt', 30);
+    }
+}
+
+
+/* Show button in grid */
+if($flatsome_opt['add_to_cart_icon'] == "button") {
+    function flatsome_add_button_in_grid (){
+        global $product;
+            echo apply_filters( 'woocommerce_loop_add_to_cart_link',
+                sprintf( '<div class="add-to-cart-button"><a href="%s" rel="nofollow" data-product_id="%s" class="%s product_type_%s button alt-button small clearfix">%s</a></div>',
+                    esc_url( $product->add_to_cart_url() ),
+                    esc_attr( $product->id ),
+                    $product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
+                    esc_attr( $product->product_type ),
+                    esc_html( $product->add_to_cart_text() )
+                ),
+            $product );
+       }
+     add_action('woocommerce_after_shop_loop_item_title', 'flatsome_add_button_in_grid', 30);
+}

@@ -4,7 +4,7 @@
  *
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
- * @version     2.0.0
+ * @version     2.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -28,7 +28,7 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
 }
 
 // filter hook for include new pages inside the payment method
-$get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', $woocommerce->cart->get_checkout_url() ); ?>
+$get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', WC()->cart->get_checkout_url() ); ?>
 
 
 <!-- LOGIN -->
@@ -56,12 +56,11 @@ $info_message = apply_filters( 'woocommerce_checkout_login_message', __( 'Return
 }
 ?>
 
-
 </div><!-- .large-12 -->
 </div>
 
 
-	<form name="checkout" method="post" class="checkout" action="<?php echo esc_url( $get_checkout_url ); ?>">
+<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( $get_checkout_url ); ?>" enctype="multipart/form-data">
 	
 	<div class="row">
 	<div id="customer_details" class="large-7  columns">
@@ -79,24 +78,20 @@ $info_message = apply_filters( 'woocommerce_checkout_login_message', __( 'Return
 		 <?php do_action( 'woocommerce_checkout_shipping' ); ?>
 	</div>
 
+	<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
+
+  	<?php endif; ?>
 
 	</div><!-- .large-7 -->
 
 	<div class="large-5  columns">
-		<div class="order-review">
+		<div id="order_review" class="order-review woocommerce-checkout-review-order">
+			<h3 id="order_review_heading"><?php _e( 'Your order', 'woocommerce' ); ?></h3>
+			<?php do_action( 'woocommerce_checkout_order_review' ); ?>
+		</div><!-- order-review -->
 
-		<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
-		<h3 id="order_review_heading"><?php _e( 'Your order', 'woocommerce' ); ?></h3>
-
-		<?php endif; ?>
-
-		<?php do_action( 'woocommerce_checkout_order_review' ); ?>
-
-		</div>
+		<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
 	</div><!-- .large-5 -->
 	</div><!-- .row -->
     </form><!-- .checkout -->
     <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
-
-
-

@@ -115,7 +115,7 @@ function ux_logo( $atts, $content = null ){
       $img = $img[0];
     }
 
-    $content = '<div class="ux_logo"><a title="'.$title.'" href="#" style="padding: '.$padding.';"><img src="'.$img.'" alt="'.$title.'" style="max-height:'.$height.';min-height:'.$height.'" /></a></div>';
+    $content = '<div class="ux_logo"><a title="'.$title.'" href="'.$link.'" style="padding: '.$padding.';"><img src="'.$img.'" alt="'.$title.'" style="max-height:'.$height.';min-height:'.$height.'" /></a></div>';
     return $content;
 }
 add_shortcode('logo', 'ux_logo');
@@ -134,9 +134,14 @@ function ux_image( $atts, $content = null ){
     'link' => '',
   ), $atts ) );
 
-    $image =  wp_get_attachment_image_src($id, $image_size);
-    $image_large =  wp_get_attachment_image_src($id, 'large');
-
+   $img = $id;
+   if (strpos($img,'http://') !== false || strpos($img,'https://') !== false) {
+      $img = $img;
+    }
+    else {
+      $img = wp_get_attachment_image_src($img, 'large');
+      $img = $img[0];
+    }
 
     $link_start = '';
     $link_end = '';
@@ -147,12 +152,12 @@ function ux_image( $atts, $content = null ){
     }
 
     if($lightbox){
-       $link_start = '<a class="image-lightbox" href="'.$image_large[0].'">';
+       $link_start = '<a class="image-lightbox" href="'.$img.'">';
        $link_end = '</a>';
     }
    
     if($drop_shadow) $drop_shadow = 'box-shadow';
-    $content = '<div class="ux-img-container '.$drop_shadow.'">'.$link_start.'<img src="'.$image[0].'" alt="'.$title.'" title="'.$title.'" style="bottom:-'.$image_pull.'"/>'.$link_end.'</div>';
+    $content = '<div class="ux-img-container '.$drop_shadow.'">'.$link_start.'<img src="'.$img.'" alt="'.$title.'" title="'.$title.'" style="bottom:-'.$image_pull.'"/>'.$link_end.'</div>';
     return $content;
 }
 add_shortcode('ux_image', 'ux_image');

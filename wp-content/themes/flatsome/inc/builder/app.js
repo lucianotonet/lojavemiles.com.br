@@ -1,4 +1,5 @@
 // UX BUILDER JS
+
 var uxcreateCookie = function(name, value, days) {
     var expires;
     if (days) {
@@ -31,9 +32,7 @@ function uxgetCookie(c_name) {
 function ux_UploadImage(div){
     // Uploading files
     var file_frame;
- 
-    event.preventDefault();
- 
+
     // If the media frame already exists, reopen it.
     if ( file_frame ) {
       file_frame.open();
@@ -53,7 +52,7 @@ function ux_UploadImage(div){
     file_frame.on( 'select', function() {
       // We set multiple to false so only get one image from the uploader
       attachment = file_frame.state().get('selection').first().toJSON();
-      var ux_selected_image = attachment.url;
+      var ux_selected_image = attachment.id;
       jQuery(div).find('input').val(ux_selected_image).change();
     });
     // Finally, open the modal
@@ -76,18 +75,18 @@ jQuery( document ).ready(function($) {
 
 // start ux builder on start if set
 if($('html[data-uxbuilder="enabled"]').length){
-  $('a#enable-uxbuilder').addClass('active');
+  $('a#enable-uxbuilder').addClass('nav-tab-active');
     setTimeout(function(){
         getAllContent();
     }, 300);
 } else{
-  $('a#disable-uxbuilder').addClass('active');
+  $('a#disable-uxbuilder').addClass('nav-tab-active');
 }
 
 // update content on save or change
-$('#disable-uxbuilder, .button[name="save"], .preview.button').click(function(){
+$('#disable-uxbuilder, .button[name="save"],  .button[name="publish"], .preview.button').click(function(){
   if($('html[data-uxbuilder="enabled"]').length){
-        updateContent();
+      updateContent();
   }
 });
 
@@ -95,9 +94,9 @@ $('#disable-uxbuilder, .button[name="save"], .preview.button').click(function(){
 $('a#enable-uxbuilder').click(function(e){
   uxcreateCookie('uxbuilder','enabled');
   $(this).parent().addClass('disabled');
-  $('#uxbuilder-enable-disable a').removeClass('active');
+  $('#uxbuilder-enable-disable a').removeClass('nav-tab-active');
   $('html').attr('data-uxbuilder','enabled');
-  $(this).addClass('active');
+  $(this).addClass('nav-tab-active');
   getAllContent();
   $(window).resize();
   e.preventDefault();
@@ -106,9 +105,9 @@ $('a#enable-uxbuilder').click(function(e){
 // disable ux-builder
 $('a#disable-uxbuilder').click(function(e){
   uxcreateCookie('uxbuilder','disabled');
-  $('#uxbuilder-enable-disable a').removeClass('active');
+  $('#uxbuilder-enable-disable a').removeClass('nav-tab-active');
   $('html').attr('data-uxbuilder','disabled');
-  $(this).addClass('active');
+  $(this).addClass('nav-tab-active');
   $(window).resize();
   e.preventDefault();
 });
@@ -169,7 +168,10 @@ function setRows(){
   $('.ux-g-group').sortable({
   item: "> .ux-g",
   connectWith: '.ux-g-group:not([data-group="row"])',
-  tolerance: "intersect",
+  tolerance: "pointer",
+  forceHelperSize: true,
+  forcePlaceholderSize: false,
+  cursorAt: { left: 100, top:-1 },
     start: function(event, ui) {
       $('#drag-and-drop').addClass('dragging');
     },
@@ -192,7 +194,8 @@ function setRows(){
 
   // connect rows
   $('[data-group="row"]').sortable({ connectWith: '[data-group="row"]' });
-  $('[data-group="col"]').sortable({ connectWith: '[data-group="col"],[data-group="section"],[data-group="tab"]' });
+  $('[data-group="ux_banner"]').sortable({ connectWith: '[data-group="ux_banner"], [data-group="col"], [data-group="root"]' });
+  $('[data-group="col"]').sortable({ connectWith: '[data-group="col"],[data-group="section"],[data-group="tab"],[data-group="root"]' });
   $('[data-group="ux_price_table"]').sortable({ connectWith: '[data-group="ux_price_table"]' });
   $('[data-group="tabgroup"],[data-group="tabgroup_vertical"]').sortable({ connectWith: '[data-group="tabgroup"],[data-group="tabgroup_vertical"]' });
   $('[data-group="accordion"]').sortable({ connectWith: '[data-group="accordion"]' });
@@ -267,7 +270,7 @@ function toolBarAction(edit_div){
           $(div_clone).find('.ux-add-div').off('click').on( 'click', function(e) {
 
               $('.ux-g .ux-add-section, .ux-add-elements-wrap .ux-add-section').remove();
-              var new_div = '<div class="ux-g-new ux-g"><span class="spinner" style="display:block;float:none;"></span></div>';
+              var new_div = '<div class="ux-g-new ux-g"><span class="spinner is-active" style="display:block;float:none;"></span></div>';
               
               // has-more links
               if($(this).hasClass('ux-has-more')){
@@ -290,6 +293,9 @@ function toolBarAction(edit_div){
                                       $(current).parent().find('> .ux-g-group').append(new_div);
                                   }
                                   var content = $(this).find('textarea').val();
+
+                                  // insert code fix
+                                  if($(this).hasClass('ux-get-code')){content = $(this).parent().parent().find('textarea').val();}
 
                                   $(lightbox_div).removeClass('active');
                                   // add Content with ajax
@@ -332,7 +338,7 @@ function toolBarAction(edit_div){
         $('textarea#new_shortcode').html('');
         var id = $(this).parent().parent().data('id');
         var data = { action: 'get_shortcode_editor', shortcode: id};
-         $('.edit-shortcode-container').html('<span class="spinner" style="display:block;float:none;margin:30px;"></span>');
+         $('.edit-shortcode-container').html('<span class="spinner is-active" style="display:block;float:none;margin:30px;"></span>');
          $('.ux-lightbox[data-edit="shortcode"]').addClass('active');
 
           $.post(ajaxurl, data, function(response) {
@@ -428,6 +434,7 @@ function toolBarAction(edit_div){
               e.preventDefault();
     });
 
+
     // edit text
     $(edit_div+' .ux-g-text-inner').off('click').on( 'click', function(e) {
         var ux_current_edit_div = $(this);
@@ -455,14 +462,16 @@ function toolBarAction(edit_div){
 function updateContent(){
           $('#new-content').html($('#drag-and-drop .drag-drop-content').html());
 
+          // remove elements
+          $('#new-content .ux-add-section, #new-content .drop-zone.ux-g,  #new-content .ux-g-tools, #new-content .ux-g-add, #new-content .temp-div').remove();
+    
+
           // unwrap elements
-          $("#new-content .ux-g-text-inner, #new-content .ux-g-group, #new-content .ux-g-content,#new-content .ux-edit, #new-content .ux-g s,#new-content .edit-shortcode > strong,.edit-shortcode > span, #new-content span.edit-shortcode, #new-content .ux-g").each(function() {
+          $("#new-content .ux-g-text-inner, #new-content .ui-sortable-handle,  #new-content .ux-g-group, #new-content .ux-g-content,#new-content .ux-edit, #new-content .ux-g s,#new-content .edit-shortcode > strong,.edit-shortcode > span, #new-content span.edit-shortcode, #new-content .ux-g").each(function() {
                 $(this).replaceWith(this.childNodes);
           });
 
-          // remove elements
-          $('#new-content .ux-add-section, #new-content .ux-g-tools, #new-content .ux-g-add, #new-content .temp-div').remove();
-         
+            
            var content =  $.trim($('#new-content').html());
 
            content =  content.replace(/\[text\]/g,'');
@@ -486,20 +495,24 @@ function updateContent(){
 }
 
 
+
+
 // Get all content
 function getAllContent(){
    var new_content = get_content('#wp-content-wrap');
    if(new_content){
-      $('.drag-drop-content').html('<div class="ux-g"><span class="spinner" style="display:block;float:none;"></span></div>');
-      var data = { action: 'ux_get_content_shortcodes', content: new_content};
+      $('.drag-drop-content').html('<div class="ux-g"><span class="spinner is-active" style="display:block;float:none;"></span></div>');
+
+     var data = { action: 'ux_get_content_shortcodes', content: new_content};
       $.post(ajaxurl, data, function(response) {
-        $('#drag-and-drop .drag-drop-content').html(response);
+         $('#drag-and-drop .drag-drop-content').html(response);
          $('.ux-g-text-inner').find('.button:first').before('<p></p>');
          $('#uxbuilder-enable-disable').removeClass('disabled');
          updateLayout();
-      });
-   } else{
+      }); 
+   } else {
        $('.drag-drop-content').html('');
+       $('#uxbuilder-enable-disable').removeClass('disabled');
        updateLayout();
    }
 

@@ -37,7 +37,7 @@ function featured_box($atts, $content = null) {
   } 
 
   if(strpos($img,'.svg') !== false) {
-    $svg = new SimpleXMLElement( file_get_contents($img));
+    $svg = new SimpleXMLElement( wp_remote_fopen($img));
       $padding = "0";
       if($icon_border) $padding = ($img_width*0.2);
       echo '<svg viewBox="0 0 32 32" style="width:100%; fill:'.$icon_color.'; padding:'.$padding.'px"';

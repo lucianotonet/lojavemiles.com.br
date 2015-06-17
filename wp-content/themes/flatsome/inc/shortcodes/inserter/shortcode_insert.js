@@ -1,7 +1,7 @@
 (function() {
     tinymce.PluginManager.add('ux_shortcode_insert', function( editor, url ) {
         editor.addButton( 'ux_shortcode_insert', {
-           text: 'Flatsome',
+           text: 'Shortcodes',
             type: 'menubutton',
             tooltip: 'Add Shortcodes and Content',
             menu: [
@@ -66,7 +66,7 @@
                     menu: [
 
                         {
-                            text: 'Featued Box',
+                            text: 'Featured Box',
                             menu: [
                              {
                                     text: 'Icon Top Center',
@@ -234,7 +234,15 @@
                             menu: [
                                 {
                                     text: 'Blog Post Slider',
-                                    value: '[blog_posts posts="6" columns="3" image_height="200px" show_date="true"]',
+                                    value: '[blog_posts posts="6" type="slider" columns="3" image_height="200px" show_date="true"]',
+                                    onclick: function(e) {
+                                        e.stopPropagation();
+                                        editor.insertContent(this.value());
+                                    }       
+                                },
+                                   {
+                                    text: 'Blog Post Grid',
+                                    value: '[blog_posts posts="6" type="grid" columns="3" image_height="200px" show_date="true"]',
                                     onclick: function(e) {
                                         e.stopPropagation();
                                         editor.insertContent(this.value());
@@ -243,6 +251,13 @@
                                  {
                                     text: 'Blog Post Slider - Text overlay',
                                     value: '[blog_posts columns="3" style="text-overlay" posts="8" category="" image_height="150px" show_date="true"]',
+                                    onclick: function(e) {
+                                        e.stopPropagation();
+                                        editor.insertContent(this.value());
+                                    }       
+                                },{
+                                    text: 'Blog Post Grid - Text overlay',
+                                    value: '[blog_posts columns="3" type="grid" style="text-overlay" posts="8" category="" image_height="200px" show_date="true"]',
                                     onclick: function(e) {
                                         e.stopPropagation();
                                         editor.insertContent(this.value());
@@ -402,8 +417,8 @@
                             }       
                         },
                         {
-                            text: 'Testemonial',
-                            value: '[testimonial style="" image="http://imageurl" name="Author name" company="Company name" stars="5"]<br> Add testemonial text here <br>[/testimonial]',
+                            text: 'Testimonial',
+                            value: '[testimonial style="" image="http://imageurl" name="Author name" company="Company name" stars="5"]<br> Add testimonial text here <br>[/testimonial]',
                             onclick: function(e) {
                                 e.stopPropagation();
                                 editor.insertContent(this.value());
@@ -875,7 +890,7 @@ function ux_add_row(editor){
                 {text: 'Featured Box - Icon Left', value:'[featured_box title="Title text" img="http://iconurl" img_width="" pos="left" link=""]<p>Featured box text</p>[/featured_box]<br>'},
                 {text: 'Team Members', value:'[team_member name="Name" title="Title" facebook="http://" twitter="http://" pinterest="http://"  img="http://imageurl"]<br>Team member description<br>[/team_member]<br>'},
                 {text: 'Price Table', value:'[ux_price_table title="Awesome title" featured="false" description="This is a description" button_text="Order Now" button_link="#"]<br>[bullet_item text="This is a bullet item"]<br>[bullet_item text="This is a bullet item"]<br>[bullet_item text="This is a bullet item"]<br>[/ux_price_table]<br>'},
-                {text: 'Testemonial', value:'[testimonial image="http://imageurl" name="Author name" company="Company name" stars="5"]<br> Add testemonial text here <br>[/testimonial]<br>'},
+                {text: 'Testimonial', value:'[testimonial image="http://imageurl" name="Author name" company="Company name" stars="5"]<br> Add testimonial text here <br>[/testimonial]<br>'},
             ]
         }
 

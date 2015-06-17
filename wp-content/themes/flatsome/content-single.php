@@ -18,7 +18,7 @@ global $flatsome_opt;
 
 	<?php if ( has_post_thumbnail() ) { // check if the post has a Post Thumbnail assigned to it. ?>
     <div class="entry-image">
-    		<?php if($flatsome_opt['blog_parallax']) { ?><div class="parallax_img" style="overflow:hidden"><div class="parallax_img_inner" data-velocity="0.15"><?php } ?>
+    		<?php if($flatsome_opt['blog_parallax']) { ?><div class="parallax_img has-parallax" style="overflow:hidden"><div class="parallax_img_inner" data-velocity="0.15"><?php } ?>
             <?php the_post_thumbnail('large'); ?>
             <?php if($flatsome_opt['blog_parallax']) { ?></div></div><?php } ?>
             <div class="post-date large">

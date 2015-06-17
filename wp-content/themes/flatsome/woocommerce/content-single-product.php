@@ -65,8 +65,8 @@
     
     <div class="next-prev-nav">
         <?php // edit this in inc/template-tags.php // ?>
-        <?php next_post_link_product('%link', 'icon-angle-left next', true); ?>
-        <?php previous_post_link_product('%link', 'icon-angle-right prev', true); ?>
+        <?php next_post_link_product(); ?>
+        <?php previous_post_link_product(); ?>
     </div>
 
      <?php  woocommerce_get_template('single-product/up-sells.php');?> 

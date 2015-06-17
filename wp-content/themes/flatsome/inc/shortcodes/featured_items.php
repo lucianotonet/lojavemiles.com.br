@@ -11,6 +11,7 @@ function ux_featured_items_slider($atts, $content = null) {
         'height' => '',
         'infinitive' => 'false',
         'lightbox' => 'false',
+        'order' => 'menu_order',
   ), $atts));
   ob_start();
   ?>
@@ -28,7 +29,7 @@ function ux_featured_items_slider($atts, $content = null) {
           'post_type' => 'featured_item',
           'featured_item_category' => $cat,
           'posts_per_page' => $items,
-          'orderby'=> 'menu_order',
+          'orderby'=> $order,
         ));
         while ($wp_query->have_posts()) : $wp_query->the_post();
           $link = get_permalink(get_the_ID());
@@ -90,6 +91,7 @@ function ux_featured_items_grid($atts, $content = null) {
         'style' => '1',
         'height' => '',
         'lightbox' => 'false',
+        'order' => 'menu_order',
   ), $atts));
   ob_start();
   ?>
@@ -101,7 +103,7 @@ function ux_featured_items_grid($atts, $content = null) {
           'post_type' => 'featured_item',
           'posts_per_page' => $items,
           'featured_item_category' => $cat,
-          'orderby'=> 'menu_order',
+          'orderby'=> $order,
         ));
 
 
